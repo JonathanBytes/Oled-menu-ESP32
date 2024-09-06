@@ -1,5 +1,3 @@
-#include <Bounce2.h>
-
 // Constants
 const int DISPLAY_WIDTH = 128;
 const int DISPLAY_HEIGHT = 32;
@@ -21,20 +19,13 @@ int firstVisibleItem = 0;
 
 #include "assets/main.h"
 #include "libs/display.h"
-
-Bounce debouncerPrev = Bounce();
-Bounce debouncerNext = Bounce();
+#include "hardware/buttons.h"
 
 TaskHandle_t DisplayTask0;
 
 void setup() {
   xTaskCreatePinnedToCore(displayloop, "DisplayTask_0", 32768, NULL, 1, &DisplayTask0, 0);
-  pinMode(BUTTON_PREV_PIN, INPUT_PULLUP);
-  pinMode(BUTTON_NEXT_PIN, INPUT_PULLUP);
-  debouncerPrev.attach(BUTTON_PREV_PIN);
-  debouncerNext.attach(BUTTON_NEXT_PIN);
-  debouncerPrev.interval(50);
-  debouncerNext.interval(50);
+  buttonsSetup();
 }
 
 void loop() {
