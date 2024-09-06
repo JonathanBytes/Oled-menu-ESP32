@@ -3,6 +3,7 @@
 U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0, /* reset=*/U8X8_PIN_NONE);
 
 int currentX = ICON_SPACING;
+int scrollCurrentX = 0;
 
 void setupDisplay() {
   u8g2.begin();
@@ -20,10 +21,6 @@ void drawIcons() {
 
 void drawScrollBar() {
   // Draw the scroll bar on the display
-  int scrollPosX = (DISPLAY_WIDTH - SCROLL_BAR_WIDTH) *
-                   ((float)selectedItem / (float)(totalIcons - 1));
-  u8g2.drawBox(scrollPosX, DISPLAY_HEIGHT - SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH,
-               SCROLL_BAR_HEIGHT);
   u8g2.drawXBMP(0, DISPLAY_HEIGHT - SCROLL_BAR_HEIGHT, DISPLAY_WIDTH,
                 SCROLL_BAR_HEIGHT, uiAllArray[0]);
 }
@@ -37,7 +34,7 @@ float easeInOut(float t, float b, float c, float d) {
   return c / 2 * (t * t * t + 2) + b;
 }
 
-void animateRectangle(int startX, int endX) {
+void animateRectangle(int startX, int endX, int scrollStartX, int scrollEndX) {
   float duration = 250; // Total time of the animation in milliseconds
   unsigned long startTime = millis();
 
@@ -47,6 +44,7 @@ void animateRectangle(int startX, int endX) {
 
     // Compute the current X position using the ease-in-out function
     currentX = easeInOut(currentTime, startX, endX - startX, duration);
+    scrollCurrentX = easeInOut(currentTime, scrollStartX, scrollEndX - scrollStartX, duration);
 
     // Clear screen and draw the rectangle at the current position
     u8g2.clearBuffer();
@@ -54,7 +52,9 @@ void animateRectangle(int startX, int endX) {
     drawIcons();
     drawScrollBar();
 
-    u8g2.drawXBMP(currentX, 0, 32, 32, uiAllArray[2]);
+    u8g2.drawXBMP(currentX, 0, 32, 32, uiAllArray[2]); // draw the selection rectangle
+    u8g2.drawBox(scrollCurrentX, DISPLAY_HEIGHT - SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH,
+               SCROLL_BAR_HEIGHT);
     u8g2.sendBuffer();
 
     // Small delay to make the animation smooth
@@ -63,22 +63,32 @@ void animateRectangle(int startX, int endX) {
 
   // Ensure the final position is drawn after animation
   currentX = endX;
+  scrollCurrentX = scrollEndX;
   u8g2.clearBuffer();
   drawIcons();
   drawScrollBar();
   u8g2.drawXBMP(currentX, 0, 32, 32, uiAllArray[2]);
+  u8g2.drawBox(scrollCurrentX, DISPLAY_HEIGHT - SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH,
+               SCROLL_BAR_HEIGHT);
   u8g2.sendBuffer();
 }
+
 void drawSelectionIndicator() {
   // Draw the selection indicator on the display
   int selectionPosX = 2 + (selectedItem - firstVisibleItem) * ITEM_WIDTH;
-  if (selectionPosX != currentX) {
+  int scrollPosX = (DISPLAY_WIDTH - SCROLL_BAR_WIDTH) *
+                   ((float)selectedItem / (float)(totalIcons - 1));
+  if (selectionPosX != currentX || scrollPosX != scrollCurrentX) {
     int startX = currentX;
     int endX = selectionPosX; // Move forward to the right
-    animateRectangle(startX, endX);
+    int scrollStartX = scrollCurrentX;
+    int scrollEndX = scrollPosX;
+    animateRectangle(startX, endX, scrollStartX, scrollEndX);
   }
 
   u8g2.drawXBMP(selectionPosX, 0, ITEM_WIDTH, ICON_HEIGHT, uiAllArray[2]);
+  u8g2.drawBox(scrollPosX, DISPLAY_HEIGHT - SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH,
+               SCROLL_BAR_HEIGHT);
 }
 
 void updateDisplay() {
