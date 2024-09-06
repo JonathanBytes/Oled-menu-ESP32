@@ -18,7 +18,6 @@ const int BUTTON_NEXT_PIN = 4;
 // Variables
 int selectedItem = 0;
 int firstVisibleItem = 0;
-int totalIcons = 5;
 
 #include "assets/main.h"
 #include "libs/display.h"
@@ -39,13 +38,23 @@ void setup() {
 }
 
 void loop() {
+  // Actualiza `totalIcons` según la página actual
+  int totalIcons = (currentPage == 0) ? totalIconsPage1 : totalIconsPage2;
+
   // Update debouncers
   debouncerPrev.update();
   debouncerNext.update();
 
   // Check for button presses
   if (debouncerPrev.fell()) {
-    selectedItem = (selectedItem - 1 + totalIcons) % totalIcons;
+    // selectedItem = (selectedItem - 1 + totalIcons) % totalIcons; // previous item
+    // change menu page
+    selectedItem = 0;
+    if (currentPage == 0){
+      currentPage = 1;
+    } else {
+      currentPage = 0;
+    }
   }
   if (debouncerNext.fell()) {
     selectedItem = (selectedItem + 1) % totalIcons;

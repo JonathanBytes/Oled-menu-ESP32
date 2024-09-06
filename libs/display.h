@@ -4,6 +4,13 @@ U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0, /* reset=*/U8X8_PIN_NONE);
 
 int currentX = ICON_SPACING;
 int scrollCurrentX = 0;
+int currentPage = 1; // Variable to track the current menu page
+
+// Define total icons for each page
+const int totalIconsPage1 = sizeof(iconAllArray) / sizeof(iconAllArray[0]);
+const int totalIconsPage2 = sizeof(uiIconsAllArray) / sizeof(uiIconsAllArray[0]);
+
+int totalPages = 2;
 
 // Ease-in-out cubic function
 float easeInOut(float t, float b, float c, float d) {
@@ -19,10 +26,23 @@ void setupDisplay() {
   u8g2.setBitmapMode(1);
 }
 
-void drawIcons() {
-  for (int i = 0; i < VISIBLE_ICONS; i++) {
-    int iconIndex = (firstVisibleItem + i) % totalIcons;
-    u8g2.drawXBMP(3 + ITEM_WIDTH * i, 0, ICON_WIDTH, ICON_HEIGHT, iconAllArray[iconIndex]);
+void drawIcons(int page) {
+  int iconsToDraw = 0;
+  const unsigned char **iconArray = nullptr;
+
+  // Select the correct array and icon count based on the page
+  if (page == 0) {
+    iconsToDraw = totalIconsPage1;
+    iconArray = iconAllArray;
+  } else if (page == 1) {
+    iconsToDraw = totalIconsPage2;
+    iconArray = uiIconsAllArray;
+  }
+
+  // Draw the icons for the current page
+  for (int i = 0; i < VISIBLE_ICONS && i < iconsToDraw; i++) {
+    int iconIndex = (firstVisibleItem + i) % iconsToDraw;
+    u8g2.drawXBMP(3 + ITEM_WIDTH * i, 0, ICON_WIDTH, ICON_HEIGHT, iconArray[iconIndex]);
   }
 }
 
@@ -37,7 +57,7 @@ void drawSelection(int x, int scrollX) {
 
 void renderDisplay(int x, int scrollX) {
   u8g2.clearBuffer();
-  drawIcons();
+  drawIcons(currentPage); // Draw icons based on the current page
   drawScrollBar();
   drawSelection(x, scrollX);
   u8g2.sendBuffer();
@@ -61,6 +81,7 @@ void animateRectangle(int startX, int endX, int scrollStartX, int scrollEndX, fl
 }
 
 void drawSelectionIndicator() {
+  int totalIcons = (currentPage == 0) ? totalIconsPage1 : totalIconsPage2;
   int selectionPosX = 2 + (selectedItem - firstVisibleItem) * ITEM_WIDTH;
   int scrollPosX = (DISPLAY_WIDTH - SCROLL_BAR_WIDTH) * ((float)selectedItem / (totalIcons - 1));
 
@@ -73,7 +94,7 @@ void drawSelectionIndicator() {
 
 void updateDisplay() {
   u8g2.clearBuffer();
-  drawIcons();
+  drawIcons(currentPage); // Update based on the current page
   drawScrollBar();
   drawSelectionIndicator();
   u8g2.sendBuffer();
@@ -91,6 +112,15 @@ void animateBitmap(const unsigned char *bitmapArray[], int frames, int frameDela
 
 void bootAnimations() {
   animateBitmap(cat, 28, 40, 30, 30, 56, 4);
-  // animateBitmap(code, 122, 10, 32, 32, 56, 0);
   animateBitmap(skate, 28, 10, 32, 32, 56, 0);
+}
+
+void changePage(int direction) {
+  currentPage += direction;
+  if (currentPage < 0)
+    currentPage = 1;
+  if (currentPage >= 2)
+    currentPage = 0;
+
+  updateDisplay(); // Update display after page change
 }
