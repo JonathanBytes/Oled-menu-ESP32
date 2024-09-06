@@ -61,8 +61,7 @@ void loop() {
 
 void displayloop(void * parameter){
   setupDisplay();
-  animateBitmap(cat, 28, 40, 30, 30);
-  delay(1000);
+  bootAnimations();
   while (1) {
     updateDisplay();
   }
