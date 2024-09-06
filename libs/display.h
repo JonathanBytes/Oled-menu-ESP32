@@ -32,7 +32,7 @@ void drawScrollBar() {
 
 void drawSelection(int x, int scrollX) {
   u8g2.drawXBMP(x, 0, 32, 32, uiAllArray[2]); // Selection rectangle
-  u8g2.drawBox(scrollX, DISPLAY_HEIGHT - SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH, SCROLL_BAR_HEIGHT);
+  u8g2.drawBox(scrollX, DISPLAY_HEIGHT - SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH, SCROLL_BAR_HEIGHT); // Scroll indicator
 }
 
 void renderDisplay(int x, int scrollX) {
