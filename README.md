@@ -1,4 +1,4 @@
-# OLED Display Project
+# OLED Display Menu with Button Navigation
 
 This project implements an icon-based menu system using an **OLED display** (128x32 pixels) and buttons for navigation. The menu consists of multiple pages with icons that the user can scroll through and select. It is designed for the **ESP32** platform and uses multitasking to run the display updates in parallel with user input handling.
 
