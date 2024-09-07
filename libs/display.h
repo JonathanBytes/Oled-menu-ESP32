@@ -8,7 +8,8 @@ int currentPage = 1; // Variable to track the current menu page
 
 // Define total icons for each page
 const int totalIconsPage1 = sizeof(iconAllArray) / sizeof(iconAllArray[0]);
-const int totalIconsPage2 = sizeof(uiIconsAllArray) / sizeof(uiIconsAllArray[0]);
+const int totalIconsPage2 =
+    sizeof(uiIconsAllArray) / sizeof(uiIconsAllArray[0]);
 
 int totalPages = 2;
 
@@ -42,17 +43,20 @@ void drawIcons(int page) {
   // Draw the icons for the current page
   for (int i = 0; i < VISIBLE_ICONS && i < iconsToDraw; i++) {
     int iconIndex = (firstVisibleItem + i) % iconsToDraw;
-    u8g2.drawXBMP(3 + ITEM_WIDTH * i, 0, ICON_WIDTH, ICON_HEIGHT, iconArray[iconIndex]);
+    u8g2.drawXBMP(3 + ITEM_WIDTH * i, 0, ICON_WIDTH, ICON_HEIGHT,
+                  iconArray[iconIndex]);
   }
 }
 
 void drawScrollBar() {
-  u8g2.drawXBMP(0, DISPLAY_HEIGHT - SCROLL_BAR_HEIGHT, DISPLAY_WIDTH, SCROLL_BAR_HEIGHT, uiAllArray[0]);
+  u8g2.drawXBMP(0, DISPLAY_HEIGHT - SCROLL_BAR_HEIGHT, DISPLAY_WIDTH,
+                SCROLL_BAR_HEIGHT, uiAllArray[0]);
 }
 
 void drawSelection(int x, int scrollX) {
   u8g2.drawXBMP(x, 0, 32, 32, uiAllArray[2]); // Selection rectangle
-  u8g2.drawBox(scrollX, DISPLAY_HEIGHT - SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH, SCROLL_BAR_HEIGHT); // Scroll indicator
+  u8g2.drawBox(scrollX, DISPLAY_HEIGHT - SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH,
+               SCROLL_BAR_HEIGHT); // Scroll indicator
 }
 
 void renderDisplay(int x, int scrollX) {
@@ -63,13 +67,15 @@ void renderDisplay(int x, int scrollX) {
   u8g2.sendBuffer();
 }
 
-void animateRectangle(int startX, int endX, int scrollStartX, int scrollEndX, float duration = 250) {
+void animateRectangle(int startX, int endX, int scrollStartX, int scrollEndX,
+                      float duration = 250) {
   unsigned long startTime = millis();
 
   while (millis() - startTime < duration) {
     unsigned long currentTime = millis() - startTime;
     currentX = easeInOut(currentTime, startX, endX - startX, duration);
-    scrollCurrentX = easeInOut(currentTime, scrollStartX, scrollEndX - scrollStartX, duration);
+    scrollCurrentX = easeInOut(currentTime, scrollStartX,
+                               scrollEndX - scrollStartX, duration);
 
     renderDisplay(currentX, scrollCurrentX);
     delay(10);
@@ -83,7 +89,8 @@ void animateRectangle(int startX, int endX, int scrollStartX, int scrollEndX, fl
 void drawSelectionIndicator() {
   int totalIcons = (currentPage == 0) ? totalIconsPage1 : totalIconsPage2;
   int selectionPosX = 2 + (selectedItem - firstVisibleItem) * ITEM_WIDTH;
-  int scrollPosX = (DISPLAY_WIDTH - SCROLL_BAR_WIDTH) * ((float)selectedItem / (totalIcons - 1));
+  int scrollPosX = (DISPLAY_WIDTH - SCROLL_BAR_WIDTH) *
+                   ((float)selectedItem / (totalIcons - 1));
 
   if (selectionPosX != currentX || scrollPosX != scrollCurrentX) {
     animateRectangle(currentX, selectionPosX, scrollCurrentX, scrollPosX);
@@ -100,7 +107,8 @@ void updateDisplay() {
   u8g2.sendBuffer();
 }
 
-void animateBitmap(const unsigned char *bitmapArray[], int frames, int frameDelay, int width, int height, int xPos, int yPos) {
+void animateBitmap(const unsigned char *bitmapArray[], int frames,
+                   int frameDelay, int width, int height, int xPos, int yPos) {
   for (int i = 0; i < frames; i++) {
     u8g2.firstPage();
     do {

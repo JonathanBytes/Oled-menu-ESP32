@@ -19,7 +19,7 @@ int firstVisibleItem = 0;
 
 #include "assets/main.h"
 #include "libs/display.h"
-#include "hardware/buttons.h"
+#include "libs/input/buttons.h"
 
 TaskHandle_t DisplayTask0;
 
