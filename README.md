@@ -33,10 +33,6 @@ This project implements an icon-based menu system using an **OLED display** (128
 - **Previous Button**: GPIO 16
 - **Next Button**: GPIO 4
 
-### Wiring
-
-Connect the OLED display to the I2C pins of the ESP32, and wire the buttons to their respective GPIO pins with pull-down resistors.
-
 ### Software
 
 1. Install [ **U8g2** ](https://github.com/olikraus/u8g2) via Arduino Library Manager.
