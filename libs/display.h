@@ -119,8 +119,8 @@ void animateBitmap(const unsigned char *bitmapArray[], int frames,
 }
 
 void bootAnimations() {
-  animateBitmap(cat, 28, 40, 30, 30, 56, 4);
-  animateBitmap(skate, 28, 10, 32, 32, 56, 0);
+  animateBitmap(cat, 28, 40, 30, 30, (DISPLAY_WIDTH - 30) / 2, 1);
+  animateBitmap(skate, 28, 10, 32, 32, (DISPLAY_WIDTH - 32) / 2, 0);
 }
 
 void changePage(int direction) {
