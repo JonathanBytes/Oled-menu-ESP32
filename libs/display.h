@@ -1,16 +1,15 @@
+
 #include <U8g2lib.h>
 
 U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0, /* reset=*/U8X8_PIN_NONE);
 
 int currentX = ICON_SPACING;
 int scrollCurrentX = 0;
-int currentPage = 1; // Variable to track the current menu page
 
 // Define total icons for each page
 const int totalIconsPage1 = sizeof(iconAllArray) / sizeof(iconAllArray[0]);
 const int totalIconsPage2 =
     sizeof(uiIconsAllArray) / sizeof(uiIconsAllArray[0]);
-
 int totalPages = 2;
 
 // Ease-in-out cubic function
