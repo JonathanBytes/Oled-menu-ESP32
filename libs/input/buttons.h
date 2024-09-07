@@ -1,33 +1,46 @@
+#include <Arduino_Helpers.h>
+#include <AH/Hardware/MultiPurposeButton.hpp>
 
-#include <Bounce2.h> // Assuming you're using the Bounce2 library
+MultiPurposeButton btn1{16}, btn2{4};
 
-Bounce debouncerPrev = Bounce();
-Bounce debouncerNext = Bounce();
-
-void buttonsSetup() {
-  pinMode(BUTTON_PREV_PIN, INPUT_PULLUP);
-  pinMode(BUTTON_NEXT_PIN, INPUT_PULLUP);
-  debouncerPrev.attach(BUTTON_PREV_PIN);
-  debouncerPrev.interval(25); // debounce interval
-  debouncerNext.attach(BUTTON_NEXT_PIN);
-  debouncerNext.interval(25);
+void configureButton(MultiPurposeButton &button) {
+  button.setLongPressDelay(600);
+  button.setMultiPressDelay(400);
+  button.begin();
 }
 
-void handleButtonPresses(int totalIcons) {
-  debouncerPrev.update();
-  debouncerNext.update();
+void buttonsSetup() {
+  configureButton(btn1);
+  configureButton(btn2);
+}
 
-  if (debouncerPrev.fell()) {
+using ValueArray = uint8_t[2];
+void handleButton(MultiPurposeButton &button, bool direction, int totalIcons) {
+  switch (button.update()) {
+  case button.None:
+    break;
+  case button.PressStart:
+    break;
+  case button.ShortPressRelease:
+    if (!direction) {
+      selectedItem = (selectedItem - 1 + totalIcons) % totalIcons;
+    } else {
+      selectedItem = (selectedItem + 1) % totalIcons;
+    }
+    break;
+  case button.LongPress:
     selectedItem = 0;
     currentPage = (currentPage == 0) ? 1 : 0; // toggle between pages
+    break;
   }
-  if (debouncerNext.fell()) {
-    selectedItem = (selectedItem + 1) % totalIcons;
-  }
-
   if (selectedItem >= firstVisibleItem + VISIBLE_ICONS) {
     firstVisibleItem = (firstVisibleItem + 1) % totalIcons;
   } else if (selectedItem < firstVisibleItem) {
     firstVisibleItem = (firstVisibleItem - 1 + totalIcons) % totalIcons;
   }
+}
+
+void handleButtonPresses(int totalIcons) {
+  handleButton(btn1, false, totalIcons);
+  handleButton(btn2, true, totalIcons);
 }
