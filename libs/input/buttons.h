@@ -1,4 +1,3 @@
-#include <Arduino_Helpers.h>
 #include <AH/Hardware/MultiPurposeButton.hpp>
 
 MultiPurposeButton btn1{16}, btn2{4};
@@ -22,15 +21,17 @@ void handleButton(MultiPurposeButton &button, bool direction, int totalIcons) {
   case button.PressStart:
     break;
   case button.ShortPressRelease:
+    // In page menu navigation
     if (!direction) {
-      selectedItem = (selectedItem - 1 + totalIcons) % totalIcons;
+      midi.sendCC({69, Channel_1}, 9);
     } else {
-      selectedItem = (selectedItem + 1) % totalIcons;
+      midi.sendCC({69, Channel_1}, 8);
     }
     break;
   case button.LongPress:
+    // Change page
     selectedItem = 0;
-    currentPage = (currentPage == 0) ? 1 : 0; // toggle between pages
+    currentPage = (currentPage + 1) % totalPages; // toggle between pages
     break;
   }
   if (selectedItem >= firstVisibleItem + VISIBLE_ICONS) {

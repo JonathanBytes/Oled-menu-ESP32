@@ -2,7 +2,7 @@
 #define CONSTANTS_H
 
 const int DISPLAY_WIDTH = 128;
-const int DISPLAY_HEIGHT = 32;
+const int DISPLAY_HEIGHT = 64;
 const int ICON_WIDTH = 28;
 const int ICON_HEIGHT = 28;
 const int ICON_SPACING = 3;
