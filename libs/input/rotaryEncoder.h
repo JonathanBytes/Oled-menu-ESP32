@@ -14,44 +14,6 @@ AiEsp32RotaryEncoder rotaryEncoder =
 
 void IRAM_ATTR readEncoderISR() { rotaryEncoder.readEncoder_ISR(); }
 
-void on_button_short_click() {
-}
-
-void on_button_long_click() {
-  // Change page
-  selectedItem = 0;
-  currentPage = (currentPage + 1) % totalPages; // toggle between pages
-}
-
-void handle_rotary_button() {
-  static unsigned long lastTimeButtonDown = 0;
-  static bool wasButtonDown = false;
-
-  bool isEncoderButtonDown = rotaryEncoder.isEncoderButtonDown();
-  //isEncoderButtonDown = !isEncoderButtonDown; //uncomment this line if your button is reversed
-
-  if (isEncoderButtonDown) {
-    if (!wasButtonDown) {
-      //start measuring
-      lastTimeButtonDown = millis();
-    }
-    //else we wait since button is still down
-    wasButtonDown = true;
-    return;
-  }
-
-  //button is up
-  if (wasButtonDown) {
-    //click happened, lets see if it was short click, long click or just too short
-    if (millis() - lastTimeButtonDown >= longPressAfterMiliseconds) {
-      on_button_long_click();
-    } else if (millis() - lastTimeButtonDown >= shortPressAfterMiliseconds) {
-      on_button_short_click();
-    }
-  }
-  wasButtonDown = false;
-}
-
 void rotaryEncoderSetup() {
   rotaryEncoder.begin();
   rotaryEncoder.setup(readEncoderISR);
@@ -62,6 +24,7 @@ void rotaryEncoderSetup() {
   rotaryEncoder.areEncoderPinsPulldownforEsp32 = true;
 
   rotaryEncoder.setBoundaries(-500, 500, false); // select delivery
+  rotaryEncoder.disableAcceleration();
 }
 
 void handleRotaryEncoder(int totalIcons) {
@@ -74,7 +37,9 @@ void handleRotaryEncoder(int totalIcons) {
     // Move to previous selection
     selectedItem = (selectedItem + 1) % totalIcons;
   }
-  if (rotaryEncoder.isEncoderButtonClicked()) {
-    handle_rotary_button();
+  if (selectedItem >= firstVisibleItem + VISIBLE_ICONS) {
+    firstVisibleItem = (firstVisibleItem + 1) % totalIcons;
+  } else if (selectedItem < firstVisibleItem) {
+    firstVisibleItem = (firstVisibleItem - 1 + totalIcons) % totalIcons;
   }
 }

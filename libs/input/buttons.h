@@ -1,6 +1,6 @@
 #include <AH/Hardware/MultiPurposeButton.hpp>
 
-MultiPurposeButton btn1{16}, btn2{4};
+MultiPurposeButton btn1{16}, btn2{4}, rotbtn{5};
 
 void configureButton(MultiPurposeButton &button) {
   button.setLongPressDelay(600);
@@ -11,9 +11,9 @@ void configureButton(MultiPurposeButton &button) {
 void buttonsSetup() {
   configureButton(btn1);
   configureButton(btn2);
+  configureButton(rotbtn);
 }
 
-using ValueArray = uint8_t[2];
 void handleButton(MultiPurposeButton &button, bool direction, int totalIcons) {
   switch (button.update()) {
   case button.None:
@@ -21,7 +21,6 @@ void handleButton(MultiPurposeButton &button, bool direction, int totalIcons) {
   case button.PressStart:
     break;
   case button.ShortPressRelease:
-    // In page menu navigation
     if (!direction) {
       midi.sendCC({69, Channel_1}, 9);
     } else {
@@ -34,14 +33,27 @@ void handleButton(MultiPurposeButton &button, bool direction, int totalIcons) {
     currentPage = (currentPage + 1) % totalPages; // toggle between pages
     break;
   }
-  if (selectedItem >= firstVisibleItem + VISIBLE_ICONS) {
-    firstVisibleItem = (firstVisibleItem + 1) % totalIcons;
-  } else if (selectedItem < firstVisibleItem) {
-    firstVisibleItem = (firstVisibleItem - 1 + totalIcons) % totalIcons;
+}
+
+void handleRotaryButton(MultiPurposeButton &rotbtn) {
+  switch (rotbtn.update()) {
+  case rotbtn.None:
+    break;
+  case rotbtn.PressStart:
+    break;
+  case rotbtn.ShortPressRelease:
+    midi.sendCC({69, Channel_1}, 9);
+    break;
+  case rotbtn.LongPress:
+    // Change page
+    selectedItem = 0;
+    currentPage = (currentPage + 1) % totalPages; // toggle between pages
+    break;
   }
 }
 
 void handleButtonPresses(int totalIcons) {
   handleButton(btn1, false, totalIcons);
   handleButton(btn2, true, totalIcons);
+  handleRotaryButton(rotbtn);
 }
