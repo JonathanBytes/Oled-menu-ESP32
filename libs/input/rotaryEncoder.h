@@ -5,9 +5,11 @@
 #define ROT_SW 5
 
 #define ROTARY_ENCODER_STEPS 4
-//paramaters for button
-unsigned long shortPressAfterMiliseconds = 50;   //how long short press shoud be. Do not set too low to avoid bouncing (false press events).
-unsigned long longPressAfterMiliseconds = 600;  //how long long press shoud be.
+// paramaters for button
+unsigned long shortPressAfterMiliseconds =
+    50; // how long short press shoud be. Do not set too low to avoid bouncing
+        // (false press events).
+unsigned long longPressAfterMiliseconds = 600; // how long long press shoud be.
 
 AiEsp32RotaryEncoder rotaryEncoder =
     AiEsp32RotaryEncoder(ROT_CLK, ROT_DT, ROT_SW, -1, ROTARY_ENCODER_STEPS);
@@ -32,7 +34,7 @@ void handleRotaryEncoder(int totalIcons) {
   if (encoderDelta < 0) {
     // Move to next selection
     selectedItem = (selectedItem - 1 + totalIcons) % totalIcons;
-  } 
+  }
   if (encoderDelta > 0) {
     // Move to previous selection
     selectedItem = (selectedItem + 1) % totalIcons;
