@@ -8,7 +8,7 @@ TaskHandle_t DisplayTask0;
 
 void setup() {
   Serial.begin(115200);
-  xTaskCreatePinnedToCore(displayloop, "DisplayTask_0", 32768, NULL, 1, &DisplayTask0, 0);
+  xTaskCreatePinnedToCore(displayloop, "DisplayTask_0", 2048, NULL, 1, &DisplayTask0, 0);
   hardwareSetup();
 }
 
@@ -24,6 +24,6 @@ void displayloop(void *parameter) {
   while (1) {
     updateDisplay();
     if (FRAME_CAP) { vTaskDelay(FRAME_DELAY/portTICK_PERIOD_MS); }
-    // Consider adding a delay here if needed to prevent task starvation
+    // Serial.println("DisplayTask Free Stack: " + String(uxTaskGetStackHighWaterMark(NULL)));
   }
 }
