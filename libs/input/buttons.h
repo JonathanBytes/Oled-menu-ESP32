@@ -23,8 +23,10 @@ void handleButton(MultiPurposeButton &button, bool direction, int totalIcons) {
   case button.ShortPressRelease:
     if (!direction) {
       midi.sendCC({69, Channel_1}, 9);
+      selectedItem = (selectedItem - 1 + totalIcons) % totalIcons;
     } else {
       midi.sendCC({69, Channel_1}, 8);
+      selectedItem = (selectedItem + 1) % totalIcons;
     }
     break;
   case button.LongPress:

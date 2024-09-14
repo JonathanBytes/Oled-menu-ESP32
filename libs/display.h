@@ -1,9 +1,10 @@
+#include <Wire.h>
+#include "SSD1306Wire.h"
+#include "../assets/fonts/fonts.h"
 
-#include <U8g2lib.h>
+SSD1306Wire display(0x3c, SDA, SCL);  // ADDRESS, SDA, SCL
+#include "fpsLayout.h"
 
-// U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0, /*
-// reset=*/U8X8_PIN_NONE);
-U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/U8X8_PIN_NONE);
 
 int currentX = ICON_SPACING;
 int scrollCurrentX = 0;
@@ -43,8 +44,8 @@ float easeInOut(float t, float b, float c, float d) {
 }
 
 void setupDisplay() {
-  u8g2.begin();
-  u8g2.setBitmapMode(1);
+  display.init();
+  // display.flipScreenVertically();
 }
 
 void drawIcons(int page) {
@@ -57,28 +58,29 @@ void drawIcons(int page) {
   // Dibujar íconos
   for (int i = 0; i < VISIBLE_ICONS && i < iconsToDraw; i++) {
     int iconIndex = (firstVisibleItem + i) % iconsToDraw;
-    u8g2.drawXBMP(3 + ITEM_WIDTH * i, 0, ICON_WIDTH, ICON_HEIGHT,
+    display.drawXbm(3 + ITEM_WIDTH * i, 0, ICON_WIDTH, ICON_HEIGHT,
                   currentPage.icons[iconIndex]);
   }
 }
 
 void drawScrollBar() {
-  u8g2.drawXBMP(0, 32 - SCROLL_BAR_HEIGHT, DISPLAY_WIDTH, SCROLL_BAR_HEIGHT,
+  display.drawXbm(0, 32 - SCROLL_BAR_HEIGHT, DISPLAY_WIDTH, SCROLL_BAR_HEIGHT,
                 uiAllArray[0]);
 }
 
 void drawSelection(int x, int scrollX) {
-  u8g2.drawXBMP(x, 0, 32, 32, uiAllArray[2]); // Selection rectangle
-  u8g2.drawBox(scrollX, 32 - SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH,
-               SCROLL_BAR_HEIGHT); // Scroll indicator
+  display.drawXbm(x, 0, 32, 32, uiAllArray[2]); // Selection rectangle
+  display.fillRect(scrollX, 32 - SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH,
+                 SCROLL_BAR_HEIGHT); // Scroll indicator
 }
 
 void renderDisplay(int x, int scrollX) {
-  u8g2.clearBuffer();
+  display.clear();
   drawIcons(currentPage); // Draw icons based on the current page
   drawScrollBar();
   drawSelection(x, scrollX);
-  u8g2.sendBuffer();
+  if (SHOW_FPS) { updateFPS(); }
+  display.display();
 }
 
 void animateRectangle(int startX, int endX, int scrollStartX, int scrollEndX,
@@ -92,7 +94,10 @@ void animateRectangle(int startX, int endX, int scrollStartX, int scrollEndX,
                                scrollEndX - scrollStartX, duration);
 
     renderDisplay(currentX, scrollCurrentX);
-    delay(10);
+    if (FRAME_CAP) {
+      delay(FRAME_DELAY);
+      delay(0); // Allow other tasks to run
+    }
   }
 
   currentX = endX;
@@ -114,27 +119,34 @@ void drawSelectionIndicator() {
 }
 
 void updateDisplay() {
-  u8g2.clearBuffer();
+  display.clear();
   drawIcons(currentPage); // Update based on the current page
   drawScrollBar();
   drawSelectionIndicator();
-  u8g2.sendBuffer();
+  if (SHOW_FPS) { updateFPS(); }
+  display.display();
 }
 
+// Function to animate a bitmap and update FPS
 void animateBitmap(const unsigned char *bitmapArray[], int frames,
-                   int frameDelay, int width, int height, int xPos, int yPos) {
-  for (int i = 0; i < frames; i++) {
-    u8g2.firstPage();
-    do {
-      u8g2.drawXBMP(xPos, yPos, width, height, bitmapArray[i]);
-    } while (u8g2.nextPage());
-    delay(frameDelay);
+                   int frameDelay, int repetitions, int width, int height, int xPos, int yPos) {
+  for (int j = 0; j < repetitions; j++) {
+    for (int i = 0; i < frames; i++) {
+      display.clear();
+      display.drawXbm(xPos, yPos, width, height, bitmapArray[i]);
+      
+      if (SHOW_FPS) { updateFPS(); }
+      display.display();
+      if (FRAME_CAP) {
+        delay(frameDelay); // delay for fixed framerate
+      }
+    }
   }
 }
 
 void bootAnimations() {
-  animateBitmap(cat, 28, 40, 30, 30, (DISPLAY_WIDTH - 30) / 2, 1);
-  animateBitmap(skate, 28, 10, 32, 32, (DISPLAY_WIDTH - 32) / 2, 0);
+  animateBitmap(cat, 28, 16, 2, 30, 30, (DISPLAY_WIDTH - 30) / 2, (DISPLAY_HEIGHT - 30) / 2);
+  animateBitmap(skate, 28, 16, 2, 32, 32, (DISPLAY_WIDTH - 32) / 2, (DISPLAY_HEIGHT - 30) / 2);
 }
 
 void changePage(int direction) {
