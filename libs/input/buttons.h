@@ -1,6 +1,36 @@
 #include <AH/Hardware/MultiPurposeButton.hpp>
 
-MultiPurposeButton btn1{16}, btn2{4}, rotbtn{5};
+MultiPurposeButton btn1{4}, btn2{16}, rotbtn{5};
+
+int snapshots = 4;
+int currentSnapshot = 0;
+
+void updateLeds() {
+  if (!fading) { // Solo permitimos cambiar LEDs si no está en fade
+    LED_CHANGE = true;
+
+    // Actualizar el estado de los LEDs según el snapshot actual
+    if (currentSnapshot == 0) {
+      LED1_ON = true;
+      LED2_ON = false;
+      LED3_ON = false;
+    } else if (currentSnapshot == 1) {
+      LED1_ON = false;
+      LED2_ON = true;
+      LED3_ON = false;
+    } else if (currentSnapshot == 2) {
+      LED1_ON = false;
+      LED2_ON = false;
+      LED3_ON = true;
+    } else if (currentSnapshot == 3) {
+      LED1_ON = true;
+      LED2_ON = true;
+      LED3_ON = true;
+    }
+
+    fading = true; // Marcar que estamos en un fade
+  }
+}
 
 void configureButton(MultiPurposeButton &button) {
   button.setLongPressDelay(600);
@@ -22,12 +52,21 @@ void handleButton(MultiPurposeButton &button, bool direction, int totalIcons) {
     break;
   case button.ShortPressRelease:
     if (!direction) {
-      midi.sendCC({69, Channel_1}, 9);
+      currentSnapshot--;
+      if (currentSnapshot < 0) {
+        currentSnapshot = snapshots - 1;
+      }
+      midi.sendCC({69, Channel_1}, currentSnapshot);
       selectedItem = (selectedItem - 1 + totalIcons) % totalIcons;
     } else {
-      midi.sendCC({69, Channel_1}, 8);
+      currentSnapshot++;
+      if (currentSnapshot > (snapshots - 1)) {
+        currentSnapshot = 0;
+      }
+      midi.sendCC({69, Channel_1}, currentSnapshot);
       selectedItem = (selectedItem + 1) % totalIcons;
     }
+    updateLeds();
     break;
   case button.LongPress:
     // Change page
@@ -44,7 +83,7 @@ void handleRotaryButton(MultiPurposeButton &rotbtn) {
   case rotbtn.PressStart:
     break;
   case rotbtn.ShortPressRelease:
-    midi.sendCC({69, Channel_1}, 9);
+    // midi.sendCC({69, Channel_1}, 9);
     break;
   case rotbtn.LongPress:
     // Change page

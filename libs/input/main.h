@@ -40,7 +40,7 @@ void handleHardware(int totalIcons) {
   // Manejamos los potenciómetros usando las CC calculadas dinámicamente
   handlePot(analog1, analog1CC);
   handlePot(analog2, analog2CC);
-  // handlePot(analog3, analog3CC);
+  handlePot(analog3, analog3CC);
   handlePot(analog4, analog4CC);
   handleButtonPresses(totalIcons);
   handleRotaryEncoder(totalIcons);

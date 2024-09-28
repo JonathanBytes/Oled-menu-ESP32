@@ -2,13 +2,15 @@
 #include "constants.h"
 #include "libs/menuVars.h"
 #include "libs/display.h"
+#include "libs/output/leds.h"
 #include "libs/input/main.h"
 
 TaskHandle_t DisplayTask0;
+TaskHandle_t LedTask0;
 
 void setup() {
-  Serial.begin(115200);
   xTaskCreatePinnedToCore(displayloop, "DisplayTask_0", 2048, NULL, 1, &DisplayTask0, 0);
+  xTaskCreatePinnedToCore(ledloop, "LedTask_0", 1024, NULL, 1, &LedTask0, 0);
   hardwareSetup();
 }
 
@@ -18,12 +20,18 @@ void loop() {
 }
 
 void displayloop(void *parameter) {
-  Serial.println("DisplayTask_0 running on core " + String(xPortGetCoreID()));
   setupDisplay();
   bootAnimations();
   while (1) {
     updateDisplay();
     if (FRAME_CAP) { vTaskDelay(FRAME_DELAY/portTICK_PERIOD_MS); }
-    // Serial.println("DisplayTask Free Stack: " + String(uxTaskGetStackHighWaterMark(NULL)));
+  }
+}
+
+void ledloop(void *parameter) {
+  setupLeds();
+  while (1) {
+    handleLeds();
+    vTaskDelay(10/portTICK_PERIOD_MS);
   }
 }
