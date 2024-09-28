@@ -24,16 +24,6 @@ bool fading = false;
 #define LEDC_TARGET_DUTY (256)
 #define LEDC_FADE_TIME (200)
 
-void ARDUINO_ISR_ATTR LED_FADE_ISR() {}
-
-void setupLeds() {
-  // Setup timer with given frequency, resolution and attach it to a led pin
-  // with auto-selected channel
-  ledcAttach(LED1_PIN, LEDC_BASE_FREQ, LEDC_TIMER_10_BIT);
-  ledcAttach(LED2_PIN, LEDC_BASE_FREQ, LEDC_TIMER_10_BIT);
-  ledcAttach(LED3_PIN, LEDC_BASE_FREQ, LEDC_TIMER_10_BIT);
-}
-
 void fadeLed(int led_pin, bool LED_ON, bool prevLED_ON) {
   if (LED_ON != prevLED_ON) {
     fading = true; // Iniciamos un nuevo fade
@@ -62,4 +52,12 @@ void handleLeds() {
 
   // delay(LEDC_FADE_TIME);
   fading = false; // Todos los fades han terminado
+}
+
+void setupLeds() {
+  // Setup timer with given frequency, resolution and attach it to a led pin
+  // with auto-selected channel
+  ledcAttach(LED1_PIN, LEDC_BASE_FREQ, LEDC_TIMER_10_BIT);
+  ledcAttach(LED2_PIN, LEDC_BASE_FREQ, LEDC_TIMER_10_BIT);
+  ledcAttach(LED3_PIN, LEDC_BASE_FREQ, LEDC_TIMER_10_BIT);
 }

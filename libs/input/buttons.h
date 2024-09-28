@@ -42,6 +42,7 @@ void buttonsSetup() {
   configureButton(btn1);
   configureButton(btn2);
   configureButton(rotbtn);
+  updateLeds();
 }
 
 void handleButton(MultiPurposeButton &button, bool direction, int totalIcons) {
@@ -51,20 +52,30 @@ void handleButton(MultiPurposeButton &button, bool direction, int totalIcons) {
   case button.PressStart:
     break;
   case button.ShortPressRelease:
+    // Disable last
+    midi.sendCC({currentSnapshot, Channel_1}, 127);
     if (!direction) {
       currentSnapshot--;
       if (currentSnapshot < 0) {
         currentSnapshot = snapshots - 1;
       }
-      midi.sendCC({69, Channel_1}, currentSnapshot);
-      selectedItem = (selectedItem - 1 + totalIcons) % totalIcons;
+      // Helix Native
+      // midi.sendCC({69, Channel_1}, currentSnapshot);
+      // NeuralDSP
+      midi.sendPC({currentSnapshot, Channel_1, Cable_1});
+      midi.sendCC({currentSnapshot, Channel_1}, 0);
+      // selectedItem = (selectedItem - 1 + totalIcons) % totalIcons;
     } else {
       currentSnapshot++;
       if (currentSnapshot > (snapshots - 1)) {
         currentSnapshot = 0;
       }
-      midi.sendCC({69, Channel_1}, currentSnapshot);
-      selectedItem = (selectedItem + 1) % totalIcons;
+      // Helix Native
+      // midi.sendCC({69, Channel_1}, currentSnapshot);
+      // NeuralDSP
+      midi.sendPC({currentSnapshot, Channel_1, Cable_1});
+      midi.sendCC({currentSnapshot, Channel_1}, 0);
+      // selectedItem = (selectedItem + 1) % totalIcons;
     }
     updateLeds();
     break;
@@ -83,7 +94,7 @@ void handleRotaryButton(MultiPurposeButton &rotbtn) {
   case rotbtn.PressStart:
     break;
   case rotbtn.ShortPressRelease:
-    // midi.sendCC({69, Channel_1}, 9);
+    midi.sendCC({selectedItem, Channel_1}, 127);
     break;
   case rotbtn.LongPress:
     // Change page
