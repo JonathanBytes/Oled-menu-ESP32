@@ -308,7 +308,7 @@ const unsigned char animation_a_frm9_40 [] PROGMEM = {
 };
 
 // Array of all bitmaps for convenience. (Total bytes used to store images in PROGMEM = 4032)
-const unsigned char* cat[28] = {
+const unsigned char* angryCat[28] = {
 	animation_a_frm0_40,
 	animation_a_frm1_40,
 	animation_a_frm2_50,

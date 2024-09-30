@@ -4,34 +4,10 @@
 
 SSD1306Wire display(0x3c, SDA, SCL); // ADDRESS, SDA, SCL
 #include "fpsOverlay.h"
+#include "output/display/knobDisplay.h"
 
 int currentX = ICON_SPACING;
 int scrollCurrentX = 0;
-
-struct Page {
-  const unsigned char **icons;
-  int iconCount;
-};
-
-// Define los íconos de cada página
-const unsigned char *iconsPage1[] = {icon_back, icon_gear};
-const unsigned char *iconsPage2[] = {icon_back, icon_drive,  icon_amp_fndr,
-                                     icon_cab,  icon_reverb, icon_save};
-const unsigned char *iconsPage3[] = {icon_back, icon_drive,  icon_amp_mrsh,
-                                     icon_cab,  icon_reverb, icon_save};
-
-// Crear páginas
-Page pages[] = {
-    {iconsPage1,
-     sizeof(iconsPage1) / sizeof(iconsPage1[0])}, // Página 1 con 6 íconos
-    {iconsPage2,
-     sizeof(iconsPage2) / sizeof(iconsPage2[0])}, // Página 2 con 3 íconos
-    {iconsPage3,
-     sizeof(iconsPage3) / sizeof(iconsPage3[0])}, // Página 3 con 6 íconos
-};
-
-// Número total de páginas
-int totalPages = sizeof(pages) / sizeof(pages[0]);
 
 // Ease-in-out cubic function
 float easeInOut(float t, float b, float c, float d) {
@@ -121,9 +97,19 @@ void drawSelectionIndicator() {
 
 void updateDisplay() {
   display.clear();
-  drawIcons(currentPage); // Update based on the current page
-  drawScrollBar();
-  drawSelectionIndicator();
+  if (!shouldDrawCircle()) {
+    drawIcons(currentPage); // Update based on the current page
+    drawScrollBar();
+    drawSelectionIndicator();
+  }
+  // Draw the knob only for the potentiometer that was updated and within the display timeout
+  if (updatedPotIndex != -1 && shouldDrawCircle()) {
+    drawKnob(potValues[updatedPotIndex], updatedPotIndex);  // Draw the knob for the updated pot
+  } else {
+    // If the timeout has passed, reset the updatedPotIndex and clear the display
+    updatedPotIndex = -1;
+  }
+  
   if (SHOW_FPS) {
     updateFPS();
   }
@@ -151,7 +137,7 @@ void animateBitmap(const unsigned char *bitmapArray[], int frames,
 }
 
 void bootAnimations() {
-  animateBitmap(cat, 28, 16, 2, 30, 30, (DISPLAY_WIDTH - 30) / 2,
+  animateBitmap(angryCat, 28, 16, 2, 30, 30, (DISPLAY_WIDTH - 30) / 2,
                 (DISPLAY_HEIGHT - 30) / 2);
   animateBitmap(skate, 28, 16, 2, 32, 32, (DISPLAY_WIDTH - 32) / 2,
                 (DISPLAY_HEIGHT - 30) / 2);

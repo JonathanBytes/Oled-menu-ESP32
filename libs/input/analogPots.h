@@ -1,57 +1,62 @@
 #include <AH/Hardware/FilteredAnalog.hpp>
 
-int analog1Pin = 33;
-int analog2Pin = 35; // 32 used by wifi (maybe)
-int analog3Pin = 34;
-int analog4Pin = 39; // Labeled as VN on board
-const int filtering = 6;
+unsigned long last_update_time =
+    0; // To track the last time the display was updated
+const unsigned long display_duration = 3000; // Display duration in milliseconds
 
-// Create a filtered analog object:
-FilteredAnalog<7,         // Output precision in bits
-               filtering, // The amount of filtering
-               uint32_t,  // The integer type for the filter calculations
-               analog_t   // The integer type for the upscaled analog values
-               >
-    analog1 = analog1Pin;
+// Define the analog pins in an array
+int analogPins[] = {33, 35, 34, 39}; // Pin numbers for analog inputs
 
-FilteredAnalog<7,         // Output precision in bits
-               filtering, // The amount of filtering
-               uint32_t,  // The integer type for the filter calculations
-               analog_t   // The integer type for the upscaled analog values
-               >
-    analog2 = analog2Pin;
+const int numAnalogs =
+    sizeof(analogPins) / sizeof(analogPins[0]); // Total number of analog pins
+const int filtering = 4;
+const int bitPrecision = 12;
 
-FilteredAnalog<7,         // Output precision in bits
-               filtering, // The amount of filtering
-               uint32_t,  // The integer type for the filter calculations
-               analog_t   // The integer type for the upscaled analog values
+// Define an array of FilteredAnalog objects
+FilteredAnalog<bitPrecision, // Output precision in bits
+               filtering,    // The amount of filtering
+               uint32_t,     // The integer type for the filter calculations
+               analog_t      // The integer type for the upscaled analog values
                >
-    analog3 = analog3Pin;
+    analogs[numAnalogs] = {analogPins[0], analogPins[1], analogPins[2],
+                           analogPins[3]};
 
-FilteredAnalog<7,         // Output precision in bits
-               filtering, // The amount of filtering
-               uint32_t,  // The integer type for the filter calculations
-               analog_t   // The integer type for the upscaled analog values
-               >
-    analog4 = analog4Pin;
+// Variables to store potentiometer values
+int potValues[numAnalogs] = {0, 0, 0, 0}; // Initial values for all pots
+int potCCValues[numAnalogs] = {0, 0, 0, 0};
+int updatedPotIndex = -1; // To track which potentiometer was updated
+const String potLabels[numAnalogs] = {"Clean", "Rythm", "Solo", "Master"}; // Labels for the pots
 
 void analogPotsSetup() {
   // Select the correct ADC resolution
-  analog1.setupADC();
-  analog2.setupADC();
-  analog3.setupADC();
-  analog4.setupADC();
-  // Initialize the filter to whatever the value on the input is right now
-  // (otherwise, the filter is initialized to zero and you get transients)
-  analog1.resetToCurrentValue();
-  analog2.resetToCurrentValue();
-  analog3.resetToCurrentValue();
-  analog4.resetToCurrentValue();
+  for (int i = 0; i < numAnalogs; i++) {
+    analogs[i].setupADC();
+    analogs[i].resetToCurrentValue();
+  }
 }
 
-void handlePot(AH::FilteredAnalog<7, filtering, uint32_t, analog_t> &analog,
-               int CCNumber) {
-  if (analog.update()) {
-    midi.sendCC({CCNumber, Channel_1}, analog.getValue());
+void handlePots() {
+  for (int i = 0; i < numAnalogs; i++) {
+    if (analogs[i].update()) {
+      int new_value = map(analogs[i].getValue(), 0, 4080, 0, 100);
+
+      // Only update if the value has changed significantly
+      int tolerance = 1;
+      if (potValues[i] > new_value + tolerance || potValues[i] < new_value - tolerance) {
+        potValues[i] = new_value;
+
+        int ccValue = map(analogs[i].getValue(), 0, 4080, 0, 127); // Map the value to 0-127
+        midi.sendCC({potCCValues[i], Channel_1}, ccValue); // Send the CC message
+
+        // Set updatedPotIndex to track the last updated potentiometer
+        updatedPotIndex = i;
+        last_update_time = millis();  // Update the timestamp when a change happens
+      }
+    }
   }
+}
+
+// Function to determine if the circle should be drawn
+bool shouldDrawCircle() {
+  return (millis() - last_update_time < display_duration);
 }
