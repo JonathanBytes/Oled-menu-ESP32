@@ -4,21 +4,6 @@
 // use 5000 Hz as a LEDC base frequency
 #define LEDC_BASE_FREQ 5000
 
-// fade LED PIN (replace with LED_BUILTIN constant for built-in LED)
-#define LED1_PIN 14
-#define LED2_PIN 12
-#define LED3_PIN 13
-
-bool LED_CHANGE = false;
-bool LED1_ON = false;
-bool LED2_ON = false;
-bool LED3_ON = false;
-bool prevLED1_ON = false;
-bool prevLED2_ON = false;
-bool prevLED3_ON = false;
-
-bool fading = false;
-
 // define starting duty, target duty and maximum fade time
 #define LEDC_START_DUTY (0)
 #define LEDC_TARGET_DUTY (127)

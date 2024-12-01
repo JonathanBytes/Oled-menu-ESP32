@@ -1,3 +1,6 @@
 #include "Dialog_plain_6.h"
 #include "Dialog_plain_7.h"
 #include "Dialog_plain_8.h"
+#include "Pixels_16.h"
+#include "Pixel_Operator_16.h"
+#include "Pixel_Operator_Bold_16.h"

@@ -1,6 +1,6 @@
 #include <AH/Hardware/MultiPurposeButton.hpp>
 
-MultiPurposeButton btn1{4}, btn2{16}, rotbtn{5};
+MultiPurposeButton btn1{BUTTON_PREV_PIN}, btn2{BUTTON_NEXT_PIN}, rotbtn{5};
 
 int snapshots = 4;
 int currentSnapshot = 0;
@@ -80,9 +80,6 @@ void handleButton(MultiPurposeButton &button, bool direction, int totalIcons) {
     updateLeds();
     break;
   case button.LongPress:
-    // Change page
-    selectedItem = 0;
-    currentPage = (currentPage + 1) % totalPages; // toggle between pages
     break;
   }
 }
@@ -94,12 +91,40 @@ void handleRotaryButton(MultiPurposeButton &rotbtn) {
   case rotbtn.PressStart:
     break;
   case rotbtn.ShortPressRelease:
-    midi.sendCC({selectedItem, Channel_1}, 127);
+    // if (currentMode == ICONS_MODE && currentPage ==
+    // getPageIndexByName("editPreset")) {
+    //   currentMode = PARAMS_MODE;
+    //   selectedParam = 0; // Start with the first parameter
+    // } else if (currentMode == PARAMS_MODE) {
+    //   if (selectedParam == -1) {
+    //     selectedParam = 0; // Start with the first parameter
+    //   } else {
+    //     // Exit parameter editing mode
+    //     selectedParam = -1;
+    //   }
+    // }
+
+    // Do the function related to the selectedItem of the currentPage
+    if (currentMode == ICONS_MODE) {
+      // Change page
+      pages[currentPage].actions[selectedItem]();
+    } else if (currentMode == PARAMS_MODE && selectedParam == -1) {
+      selectedParam = hoveredParam;
+    } else if (currentMode == PARAMS_MODE && selectedParam != -1) {
+      selectedParam = -1;
+    }
     break;
   case rotbtn.LongPress:
-    // Change page
-    selectedItem = 0;
-    currentPage = (currentPage + 1) % totalPages; // toggle between pages
+    if (currentMode == ICONS_MODE) {
+      // Change page
+      selectedItem = 0;
+      currentPage = (currentPage + 1) % totalPages; // toggle between pages
+    } else if (currentMode == PARAMS_MODE) {
+      // Switch back to icons mode
+      currentMode = ICONS_MODE;
+      hoveredParam = -1;
+      selectedParam = -1;
+    }
     break;
   }
 }

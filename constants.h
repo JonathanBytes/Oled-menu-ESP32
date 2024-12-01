@@ -12,12 +12,12 @@ const int SCROLL_BAR_HEIGHT = 3;
 const int VISIBLE_ICONS =
     DISPLAY_WIDTH / (ICON_SPACING + ICON_WIDTH); // in this case 4
 
-const int BUTTON_PREV_PIN = 16;
-const int BUTTON_NEXT_PIN = 4;
+const int BUTTON_PREV_PIN = 21;
+const int BUTTON_NEXT_PIN = 47;
 
 const bool FRAME_CAP = true;
 const int TARGET_FPS = 120; // 111.11 in practice
 const int FRAME_DELAY = 1000 / TARGET_FPS;
-const bool SHOW_FPS = true;
+const bool SHOW_FPS = false;
 
 #endif

@@ -5,7 +5,7 @@ unsigned long last_update_time =
 const unsigned long display_duration = 3000; // Display duration in milliseconds
 
 // Define the analog pins in an array
-int analogPins[] = {33, 35, 34, 39}; // Pin numbers for analog inputs
+int analogPins[] = {4, 5, 6, 7}; // Pin numbers for analog inputs
 
 const int numAnalogs =
     sizeof(analogPins) / sizeof(analogPins[0]); // Total number of analog pins
@@ -25,7 +25,8 @@ FilteredAnalog<bitPrecision, // Output precision in bits
 int potValues[numAnalogs] = {0, 0, 0, 0}; // Initial values for all pots
 int potCCValues[numAnalogs] = {0, 0, 0, 0};
 int updatedPotIndex = -1; // To track which potentiometer was updated
-const String potLabels[numAnalogs] = {"Clean", "Rythm", "Solo", "Master"}; // Labels for the pots
+const String potLabels[numAnalogs] = {"Clean", "Rythm", "Solo",
+                                      "Master"}; // Labels for the pots
 
 void analogPotsSetup() {
   // Select the correct ADC resolution
@@ -42,15 +43,19 @@ void handlePots() {
 
       // Only update if the value has changed significantly
       int tolerance = 1;
-      if (potValues[i] > new_value + tolerance || potValues[i] < new_value - tolerance) {
+      if (potValues[i] > new_value + tolerance ||
+          potValues[i] < new_value - tolerance) {
         potValues[i] = new_value;
 
-        int ccValue = map(analogs[i].getValue(), 0, 4080, 0, 127); // Map the value to 0-127
-        midi.sendCC({potCCValues[i], Channel_1}, ccValue); // Send the CC message
+        int ccValue = map(analogs[i].getValue(), 0, 4080, 0,
+                          127); // Map the value to 0-127
+        midi.sendCC({potCCValues[i], Channel_1},
+                    ccValue); // Send the CC message
 
         // Set updatedPotIndex to track the last updated potentiometer
         updatedPotIndex = i;
-        last_update_time = millis();  // Update the timestamp when a change happens
+        last_update_time =
+            millis(); // Update the timestamp when a change happens
       }
     }
   }
