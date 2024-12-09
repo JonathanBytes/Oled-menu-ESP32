@@ -1,6 +1,6 @@
 #include <AH/Hardware/MultiPurposeButton.hpp>
 
-MultiPurposeButton btn1{BUTTON_PREV_PIN}, btn2{BUTTON_NEXT_PIN}, rotbtn{5};
+MultiPurposeButton btn1{BUTTON_PREV_PIN}, btn2{BUTTON_NEXT_PIN}, rotbtn{36};
 
 int snapshots = 4;
 int currentSnapshot = 0;

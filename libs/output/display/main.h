@@ -4,13 +4,16 @@
 #include <Wire.h>
 
 SSD1306Wire display(0x3c, 1, 2); // ADDRESS, SDA, SCL
-#include "fpsOverlay.h"
-#include "knobDisplay.h"
-// #include "renderAnimations.h"
-// #include "renderIcons.h"
 
 int currentX = ICON_SPACING;
 int scrollCurrentX = 0;
+#include "fpsOverlay.h"
+#include "knobDisplay.h"
+#include "renderAnimations.h"
+// #include "renderIcons.h"
+
+// Snapshots names by index
+String snapshotsNames[] = {"Clean", "Rythm", "Solo", "Rythm Big"};
 
 void drawIcons(int currentPageIndex) {
   Page *currentPage = &pages[currentPageIndex];
@@ -97,12 +100,18 @@ void drawSelectionIndicator() {
   drawSelection(selectionPosX, scrollPosX);
 }
 
+void drawCurrentSnapshotName() {
+  display.setFont(Pixel_Operator_HB_16);
+  display.drawString(2, 36, snapshotsNames[currentSnapshot]);
+}
+
 void drawUI() {
   // All pages
 
   drawIcons(currentPage);
   drawSelectionIndicator();
   drawScrollBar();
+  drawCurrentSnapshotName();
 
   // if (currentMode == PARAMS_MODE) {
   //   Page &page =

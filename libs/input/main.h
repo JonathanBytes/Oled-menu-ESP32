@@ -1,8 +1,8 @@
-#include "midi.h"
 #include <Arduino_Helpers.h>
+#include "midi.h"
+#include "rotaryEncoder.h"
 #include "analogPots.h"
 #include "buttons.h"
-#include "rotaryEncoder.h"
 
 void hardwareSetup() {
   midi.begin(); // Inicializar la interfaz MIDI
@@ -26,7 +26,9 @@ void handleHardware(int totalIcons) {
   // Calculamos el valor base en función del número de íconos previos a la
   // página actual
   uint8_t previousIconsCount = getPreviousIconsCount(currentPage);
-  uint8_t startValue = 1 + (previousIconsCount * 4); // Cada ícono ocupa 4 espacios en el cálculo de CC
+  uint8_t startValue =
+      1 + (previousIconsCount *
+           4); // Cada ícono ocupa 4 espacios en el cálculo de CC
 
   // Cálculo de los valores CC para los potenciómetros en función del ítem
   // seleccionado
@@ -36,7 +38,7 @@ void handleHardware(int totalIcons) {
   potCCValues[3] = potCCValues[0] + 3;
 
   // Manejamos los potenciómetros usando las CC calculadas dinámicamente
-  handlePots();
+  // handlePots();
   handleButtonPresses(totalIcons);
   handleRotaryEncoder(totalIcons);
 }

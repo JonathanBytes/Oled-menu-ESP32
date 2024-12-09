@@ -1,7 +1,7 @@
 #include "AiEsp32RotaryEncoder.h"
 
-#define ROT_CLK 38
-#define ROT_DT 37
+#define ROT_CLK 37
+#define ROT_DT 38
 #define ROT_SW 36
 
 #define ROTARY_ENCODER_STEPS 4

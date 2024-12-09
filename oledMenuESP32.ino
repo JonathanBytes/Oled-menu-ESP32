@@ -38,7 +38,7 @@ void loop() {
 
 void displayloop(void *parameter) {
   setupDisplay();
-  //bootAnimations();
+  bootAnimations();
   for (int i = 0; i < 180; i++) { 
      precalculated_x_radius_pixel[i] =  sin(radians(i-90)) * radius_pixel + center_x; 
      precalculated_y_radius_pixel[i] = -cos(radians(i-90)) * radius_pixel + center_y;      
