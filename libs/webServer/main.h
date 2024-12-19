@@ -6,7 +6,9 @@
 
 void setupServerRoutes() {
   // Configurar rutas del servidor
+  server.onNotFound(handleNotFound);
   server.on("/", handleRoot);
+  server.on("/todo", handleTODO);
   server.on("/setBank", handleSetBank);
   server.on("/editBank", handleEditBank); // Nueva ruta para editar banco
   server.on("/saveBank", handleSaveBank); // Nueva ruta para guardar banco
