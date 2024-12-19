@@ -3,9 +3,11 @@
 #include "libs/vars.h"
 #include "libs/input/main.h"
 #include "libs/output/main.h"
+#include "libs/webServer/main.h"
 
 TaskHandle_t DisplayTask0;
 TaskHandle_t LedTask0;
+TaskHandle_t WebTask0;
 
 void setup() {
   // xTaskCreatePinnedToCore(displayloop, "DisplayTask_0", 2048, NULL, 1, &DisplayTask0, 0);
@@ -25,7 +27,17 @@ void setup() {
                     NULL,        /* parameter of the task */
                     1,           /* priority of the task */
                     &LedTask0,      /* Task handle to keep track of created task */
-                    0);          /* pin task to core 1 */
+                    0);          /* pin task to core 0 */
+  // Task for web config
+  xTaskCreatePinnedToCore(
+                    webloop,
+                    "WebTask_0",
+                    10000,
+                    NULL,
+                    1,
+                    &WebTask0,
+                    0);
+  
   Serial.begin(115200);
   hardwareSetup();
 }
@@ -53,6 +65,15 @@ void ledloop( void * pvParameters ){
   setupLeds();
   for(;;){
     handleLeds();
+    vTaskDelay(10/portTICK_PERIOD_MS);
+  }
+}
+
+void webloop( void * pvParameters){
+  setupServer();
+  
+  for(;;){
+    server.handleClient();
     vTaskDelay(10/portTICK_PERIOD_MS);
   }
 }
