@@ -111,8 +111,6 @@ void drawUI() {
   drawIcons(currentPage);
   drawSelectionIndicator();
   drawScrollBar();
-  drawCurrentSnapshotName();
-
   // if (currentMode == PARAMS_MODE) {
   //   Page &page =
   //       pages[currentPage]; // Ensure currentPage is treated as an index
@@ -127,6 +125,7 @@ void drawUI() {
   // Scrollbar
   // Scroll indicator
   if (currentPage == getPageIndexByName("home")) {
+    drawCurrentSnapshotName();
   }
 
   // If Preset page:
