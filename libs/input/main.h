@@ -1,8 +1,8 @@
 #include <Arduino_Helpers.h>
 #include "midi.h"
-#include "rotaryEncoder.h"
 #include "analogPots.h"
 #include "buttons.h"
+#include "rotaryEncoder.h"
 
 void hardwareSetup() {
   midi.begin(); // Inicializar la interfaz MIDI
@@ -39,6 +39,6 @@ void handleHardware(int totalIcons) {
 
   // Manejamos los potenciómetros usando las CC calculadas dinámicamente
   // handlePots();
-  handleButtonPresses(totalIcons);
+  handleButtonPresses();
   handleRotaryEncoder(totalIcons);
 }

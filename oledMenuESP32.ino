@@ -1,9 +1,11 @@
+#include "jsonSetup.h"
 #include "assets/main.h"
 #include "constants.h"
 #include "libs/vars.h"
 #include "libs/input/main.h"
 #include "libs/output/main.h"
 #include "libs/webServer/main.h"
+
 
 TaskHandle_t DisplayTask0;
 TaskHandle_t LedTask0;
@@ -39,6 +41,7 @@ void setup() {
                     0);
   
   Serial.begin(115200);
+  jsonSetup();
   hardwareSetup();
 }
 

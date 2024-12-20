@@ -100,9 +100,9 @@ void drawSelectionIndicator() {
   drawSelection(selectionPosX, scrollPosX);
 }
 
-void drawCurrentSnapshotName() {
+void drawCurrentPresetName() {
   display.setFont(Pixel_Operator_HB_16);
-  display.drawString(2, 36, snapshotsNames[currentSnapshot]);
+  display.drawString(2, 36, currentPresetName);
 }
 
 void drawUI() {
@@ -125,7 +125,7 @@ void drawUI() {
   // Scrollbar
   // Scroll indicator
   if (currentPage == getPageIndexByName("home")) {
-    drawCurrentSnapshotName();
+    drawCurrentPresetName();
   }
 
   // If Preset page:

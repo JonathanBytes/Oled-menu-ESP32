@@ -10,19 +10,19 @@ void updateLeds() {
     LED_CHANGE = true;
 
     // Actualizar el estado de los LEDs según el snapshot actual
-    if (currentSnapshot == 0) {
+    if (currentPresetIndex == 0) {
       LED1_ON = true;
       LED2_ON = false;
       LED3_ON = false;
-    } else if (currentSnapshot == 1) {
+    } else if (currentPresetIndex == 1) {
       LED1_ON = false;
       LED2_ON = true;
       LED3_ON = false;
-    } else if (currentSnapshot == 2) {
+    } else if (currentPresetIndex == 2) {
       LED1_ON = false;
       LED2_ON = false;
       LED3_ON = true;
-    } else if (currentSnapshot == 3) {
+    } else if (currentPresetIndex == 3) {
       LED1_ON = true;
       LED2_ON = true;
       LED3_ON = true;
@@ -45,42 +45,23 @@ void buttonsSetup() {
   updateLeds();
 }
 
-void handleButton(MultiPurposeButton &button, bool direction, int totalIcons) {
-  switch (button.update()) {
-  case button.None:
-    break;
-  case button.PressStart:
-    break;
-  case button.ShortPressRelease:
-    // Disable last
-    midi.sendCC({currentSnapshot, Channel_1}, 127);
-    if (!direction) {
-      currentSnapshot--;
-      if (currentSnapshot < 0) {
-        currentSnapshot = snapshots - 1;
-      }
-      // Helix Native
-      // midi.sendCC({69, Channel_1}, currentSnapshot);
-      // NeuralDSP
-      midi.sendPC({currentSnapshot, Channel_1, Cable_1});
-      midi.sendCC({currentSnapshot, Channel_1}, 0);
-      // selectedItem = (selectedItem - 1 + totalIcons) % totalIcons;
+void handleButton(MultiPurposeButton &button, bool direction) {
+  if (button.update() == button.ShortPressRelease) {
+    banksArray = doc.as<JsonArray>();
+    currentBank = banksArray[currentBankIndex];
+    presets = currentBank["presets"];
+
+    if (direction) {
+      currentPresetIndex = (currentPresetIndex + 1) % presets.size();
     } else {
-      currentSnapshot++;
-      if (currentSnapshot > (snapshots - 1)) {
-        currentSnapshot = 0;
-      }
-      // Helix Native
-      // midi.sendCC({69, Channel_1}, currentSnapshot);
-      // NeuralDSP
-      midi.sendPC({currentSnapshot, Channel_1, Cable_1});
-      midi.sendCC({currentSnapshot, Channel_1}, 0);
-      // selectedItem = (selectedItem + 1) % totalIcons;
+      currentPresetIndex = (currentPresetIndex - 1 + presets.size()) % presets.size();
     }
-    updateLeds();
-    break;
-  case button.LongPress:
-    break;
+
+    JsonObject preset = presets[currentPresetIndex];
+    currentPresetName = preset["name"].as<const char*>();
+
+  midi.sendPC({currentPresetIndex, Channel_1, Cable_1});
+  updateLeds();
   }
 }
 
@@ -129,8 +110,8 @@ void handleRotaryButton(MultiPurposeButton &rotbtn) {
   }
 }
 
-void handleButtonPresses(int totalIcons) {
-  handleButton(btn1, false, totalIcons);
-  handleButton(btn2, true, totalIcons);
+void handleButtonPresses() {
+  handleButton(btn1, false);
+  handleButton(btn2, true);
   handleRotaryButton(rotbtn);
 }

@@ -15,9 +15,9 @@ const int VISIBLE_ICONS =
 const int BUTTON_PREV_PIN = 21;
 const int BUTTON_NEXT_PIN = 47;
 
-const bool FRAME_CAP = true;
+const bool FRAME_CAP = false;
 const int TARGET_FPS = 120; // 111.11 in practice
 const int FRAME_DELAY = 1000 / TARGET_FPS;
-const bool SHOW_FPS = false;
+const bool SHOW_FPS = true;
 
 #endif

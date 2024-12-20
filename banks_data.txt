@@ -1,0 +1,88 @@
+{
+  "banks": [
+    {
+      "name": "Bank 1",
+      "presets": [
+        {
+          "name": "Preset 1",
+          "onActivate": [
+            {
+              "type": "note",
+              "channel": 1,
+              "address": 60,
+              "value": 127
+            },
+            {
+              "type": "control_change",
+              "channel": 1,
+              "address": 7,
+              "value": 100
+            }
+          ],
+          "onDeactivate": [
+            {
+              "type": "note",
+              "channel": 1,
+              "address": 60,
+              "value": 0
+            }
+          ]
+        },
+        {
+          "name": "Preset 2",
+          "onActivate": [
+            {
+              "type": "program_change",
+              "channel": 1,
+              "address": 10,
+              "value": 0
+            }
+          ],
+          "onDeactivate": []
+        },
+        {
+          "name": "Preset 3",
+          "onActivate": [],
+          "onDeactivate": []
+        },
+        {
+          "name": "Preset 4",
+          "onActivate": [],
+          "onDeactivate": []
+        }
+      ]
+    },
+    {
+      "name": "Bank 2",
+      "presets": [
+        {
+          "name": "Preset 1",
+          "onActivate": [
+            {
+              "type": "control_change",
+              "channel": 2,
+              "address": 64,
+              "value": 127
+            }
+          ],
+          "onDeactivate": []
+        },
+        {
+          "name": "Preset 2",
+          "onActivate": [],
+          "onDeactivate": []
+        },
+        {
+          "name": "Preset 3",
+          "onActivate": [],
+          "onDeactivate": []
+        },
+        {
+          "name": "Preset 4",
+          "onActivate": [],
+          "onDeactivate": []
+        }
+      ]
+    }
+  ]
+}

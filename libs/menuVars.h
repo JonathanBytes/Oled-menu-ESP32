@@ -7,6 +7,8 @@ int selectedItem = 0;
 int hoveredParam = -1;
 int selectedParam = -1;
 int firstVisibleItem = 0;
+int currentBankIndex = 0;
+int currentPresetIndex = 0;
 
 struct Page {
   const char *name;
