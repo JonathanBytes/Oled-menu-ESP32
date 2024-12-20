@@ -1,12 +1,13 @@
+#include "banks.h" // Include your JSON data header file
 #include <ArduinoJson.h>
 #include <pgmspace.h>
-#include "banks.h" // Include your JSON data header file
 
 // Declare a global DynamicJsonDocument
 DynamicJsonDocument doc(4096); // Adjust size to fit your JSON structure
 JsonArray banksArray;
 JsonObject currentBank;
 JsonArray presets;
+JsonObject currentPreset;
 String currentPresetName;
 
 void jsonSetup() {
@@ -17,7 +18,8 @@ void jsonSetup() {
   if (error) {
     Serial.print(F("Failed to parse JSON: "));
     Serial.println(error.c_str());
-    while (true); // Halt execution on error
+    while (true)
+      ; // Halt execution on error
   }
 
   // Debug: Print parsed JSON data
@@ -71,7 +73,7 @@ void jsonSetup() {
   //   }
   // }
 
-  currentPresetName = banksArray[0]["presets"][0]["name"].as<const char*>();
+  currentPresetName = banksArray[0]["presets"][0]["name"].as<const char *>();
 
   Serial.println(F("JSON setup complete."));
 }

@@ -11,6 +11,27 @@ const char banks[] PROGMEM = R"=====(
           "onActivate": [
             {
               "type": "control_change",
+              "address": 0,
+              "value": 0
+            },
+            {
+              "type": "program_change",
+              "address": 0
+            }
+          ],
+          "onDeactivate": [
+            {
+              "type": "control_change",
+              "address": 0,
+              "value": 127
+            }
+          ]
+        },
+        {
+          "name": "Rythm",
+          "onActivate": [
+            {
+              "type": "control_change",
               "address": 1,
               "value": 127
             },
@@ -28,7 +49,7 @@ const char banks[] PROGMEM = R"=====(
           ]
         },
         {
-          "name": "Rythm",
+          "name": "Solo",
           "onActivate": [
             {
               "type": "control_change",
@@ -49,7 +70,7 @@ const char banks[] PROGMEM = R"=====(
           ]
         },
         {
-          "name": "Solo",
+          "name": "Rythm Big",
           "onActivate": [
             {
               "type": "control_change",
@@ -65,27 +86,6 @@ const char banks[] PROGMEM = R"=====(
             {
               "type": "control_change",
               "address": 3,
-              "value": 0
-            }
-          ]
-        },
-        {
-          "name": "Rythm Big",
-          "onActivate": [
-            {
-              "type": "control_change",
-              "address": 4,
-              "value": 127
-            },
-            {
-              "type": "program_change",
-              "address": 4
-            }
-          ],
-          "onDeactivate": [
-            {
-              "type": "control_change",
-              "address": 4,
               "value": 0
             }
           ]

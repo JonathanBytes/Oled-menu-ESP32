@@ -50,18 +50,49 @@ void handleButton(MultiPurposeButton &button, bool direction) {
     banksArray = doc.as<JsonArray>();
     currentBank = banksArray[currentBankIndex];
     presets = currentBank["presets"];
+    currentPreset = presets[currentPresetIndex];
 
+    // Deactivate current preset
+    JsonArray onDeactivate = currentPreset["onDeactivate"];
+    for (JsonObject message : onDeactivate) {
+      const char *type = message["type"];
+      int address = message["address"];
+      int value = message.containsKey("value") ? message["value"] : 0;
+
+      if (strcmp(type, "control_change") == 0) {
+        midi.sendCC({address, Channel_1}, value);
+      } else if (strcmp(type, "program_change") == 0) {
+        midi.sendPC({address, Channel_1, Cable_1});
+      }
+    }
+
+    // Cycle through presets
     if (direction) {
       currentPresetIndex = (currentPresetIndex + 1) % presets.size();
     } else {
-      currentPresetIndex = (currentPresetIndex - 1 + presets.size()) % presets.size();
+      currentPresetIndex =
+          (currentPresetIndex - 1 + presets.size()) % presets.size();
     }
 
-    JsonObject preset = presets[currentPresetIndex];
-    currentPresetName = preset["name"].as<const char*>();
+    // Activate the new preset
+    currentBank = banksArray[currentBankIndex];
+    presets = currentBank["presets"];
+    currentPreset = presets[currentPresetIndex];
+    currentPresetName = currentPreset["name"].as<const char *>();
 
-  midi.sendPC({currentPresetIndex, Channel_1, Cable_1});
-  updateLeds();
+    JsonArray onActivate = currentPreset["onActivate"];
+    for (JsonObject message : onActivate) {
+      const char *type = message["type"];
+      int address = message["address"];
+      int value = message.containsKey("value") ? message["value"] : 0;
+
+      if (strcmp(type, "control_change") == 0) {
+        midi.sendCC({address, Channel_1}, value);
+      } else if (strcmp(type, "program_change") == 0) {
+        midi.sendPC({address, Channel_1, Cable_1});
+      }
+    }
+    updateLeds();
   }
 }
 
