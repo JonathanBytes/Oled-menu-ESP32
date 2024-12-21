@@ -68,3 +68,9 @@ This project implements an icon-based menu system using an **OLED display** (128
 1. **Power on the ESP32**: The boot animations will display automatically.
 2. **Navigate the menu**: Use the previous and next buttons to scroll through the icons and hold any button to switch between pages.
 3. **Selection Animation**: As you scroll, a selection rectangle moves smoothly (ease-in-out) with animations, and the scrollbar updates to show your position.
+
+#### TODO
+
+- [ ] Add Rotary encoder navigation through the menu.
+- [ ] Make the current preset/bank page.
+- [ ] Edit banks and presets with persistent storage.

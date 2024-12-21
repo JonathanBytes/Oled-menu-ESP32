@@ -1,3 +1,5 @@
+#include <cstring> // Ensure strcmp is available
+
 typedef void (*IconAction)();
 
 enum Mode { ICONS_MODE, PARAMS_MODE };
@@ -17,12 +19,19 @@ struct Page {
   int iconCount;
 };
 
+// Declarations of functions and variables used later
+Page *getPageByName(const char *name);
+int getPageIndexByName(const char *name);
+int currentPage = 0;
+
+// Action functions
 void actionHome() {
   // Define what happens when the home icon is selected
 }
 
 void actionPresets() {
   // Define what happens when the presets icon is selected
+  currentPage = getPageIndexByName("preset");
 }
 
 void actionKnob() {
@@ -39,11 +48,12 @@ void actionShutdown() {
 
 void actionBack() {
   // Define what happens when the back icon is selected
+  currentPage = getPageIndexByName("home");
 }
 
 void actionGear() {
-  // currentPage = getPageIndexByName("settings");
   // Define what happens when the gear icon is selected
+  currentPage = getPageIndexByName("settings");
 }
 
 void actionBrightness() {
@@ -57,6 +67,7 @@ void actionSave() {
 }
 
 void actionEditPreset() {
+  currentPage = getPageIndexByName("editPreset");
   // Define what happens when the edit preset icon is selected
 }
 
@@ -72,20 +83,29 @@ void actionDrive() {
 
 void actionAmpMrsh() {
   // Define what happens when the amp_mrsh icon is selected
+  currentMode = PARAMS_MODE;
+  hoveredParam = 0;
 }
 
 void actionAmpFndr() {
   // Define what happens when the amp_fndr icon is selected
+  currentMode = PARAMS_MODE;
+  hoveredParam = 0;
 }
 
 void actionCab() {
   // Define what happens when the cab icon is selected
+  currentMode = PARAMS_MODE;
+  hoveredParam = 0;
 }
 
 void actionReverb() {
   // Define what happens when the reverb icon is selected
+  currentMode = PARAMS_MODE;
+  hoveredParam = 0;
 }
 
+// Icons and Actions arrays
 IconAction actionsHome[] = {actionPresets, actionKnob, actionGear,
                             actionRestart, actionShutdown};
 const unsigned char *iconsHome[] = {icon_presets, icon_knob, icon_gear,
@@ -104,6 +124,7 @@ const unsigned char *iconsEditPreset[] = {icon_back, icon_drive,  icon_amp_mrsh,
 IconAction actionsSettings[] = {actionBack, actionBrightness};
 const unsigned char *iconsSettings[] = {icon_back, icon_brightness};
 
+// Pages array
 Page pages[] = {
     {"home", iconsHome, actionsHome, sizeof(iconsHome) / sizeof(iconsHome[0])},
     {"preset", iconsPreset, actionsPreset,
@@ -115,6 +136,7 @@ Page pages[] = {
 
 int totalPages = sizeof(pages) / sizeof(pages[0]);
 
+// Helper functions
 Page *getPageByName(const char *name) {
   for (int i = 0; i < totalPages; i++) {
     if (strcmp(pages[i].name, name) == 0) {
@@ -133,4 +155,5 @@ int getPageIndexByName(const char *name) {
   return -1; // Return -1 if the page is not found
 }
 
-int currentPage = getPageIndexByName("home");
+// Initialize currentPage after pages array is defined
+// int currentPage = getPageIndexByName("home");
