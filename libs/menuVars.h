@@ -74,6 +74,7 @@ void actionFrameCap() {
 
 void actionSave() {
   // Define what happens when the save icon is selected
+  saveEEPROM();
 }
 
 void actionEditPreset() {
@@ -132,9 +133,9 @@ const unsigned char *iconsEditPreset[] = {icon_back, icon_drive,  icon_amp_mrsh,
                                           icon_cab,  icon_reverb, icon_save};
 
 IconAction actionsSettings[] = {actionBack, actionBrightness, actionShowFPS,
-                                actionFrameCap};
+                                actionFrameCap, actionSave};
 const unsigned char *iconsSettings[] = {icon_back, icon_brightness,
-                                        icon_brightness, icon_drive};
+                                        icon_brightness, icon_drive, icon_save};
 
 // Pages array
 Page pages[] = {

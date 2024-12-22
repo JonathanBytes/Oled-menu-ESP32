@@ -51,7 +51,7 @@ IconParams iconParamsArray[] = {
 };
 
 // Brightness from params
-int displayBrightness = iconParamsArray[5].paramValues[0];
+// int displayBrightness = iconParamsArray[5].paramValues[0];
 
 int getIconParamsCount(const unsigned char *icon) {
   for (const auto &iconParams : iconParamsArray) {
