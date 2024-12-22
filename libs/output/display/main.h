@@ -110,14 +110,6 @@ void drawSelectionIndicator() {
   currentX = animatePosition(currentX, currentTargetX, animationStartTime, 500);
   scrollCurrentX = animatePosition(scrollCurrentX, scrollTargetX, animationStartTime, 500);
 
-  // Snap to target when within tolerance
-  if (abs(currentX - currentTargetX) < ANIMATION_TOLERANCE) {
-    currentX = currentTargetX;
-  }
-  if (abs(scrollCurrentX - scrollTargetX) < ANIMATION_TOLERANCE) {
-    scrollCurrentX = scrollTargetX;
-  }
-
   // Draw the selection at interpolated positions
   drawSelection(currentX, scrollCurrentX);
 }

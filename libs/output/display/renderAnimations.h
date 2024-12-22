@@ -32,25 +32,29 @@ float easeInOutQuad(float t, float b, float c, float d) {
   return -c / 2 * (t * (t - 2) - 1) + b;
 }
 
-float animatePosition(float a, float b, unsigned long startTime, unsigned long duration) {
-  // Calculate elapsed time
-  unsigned long currentTime = millis();
-  unsigned long elapsedTime = currentTime - startTime;
+float animatePosition(float start, float target, unsigned long startTime, int duration) {
+  unsigned long elapsedTime = millis() - startTime;
 
-  // Clamp elapsed time to duration
-  if (elapsedTime > duration) elapsedTime = duration;
-
-  // Use easing function to interpolate
-  float currentPosition = easeInOutQuad(elapsedTime, a, b - a, duration);
-  // Use easing cubic
-  // float currentPosition = easeInOut(elapsedTime, a, b - a, duration);
-
-  // Stop animation if the position reaches the target
+  // Ensure we don't overshoot the duration
   if (elapsedTime >= duration) {
-    return b;
+    return target; // Snap to the target at the end of the animation
   }
 
-  return currentPosition;
+  // Use an easing function for smooth animation
+  float t = (float)elapsedTime / duration;
+  t = (t > 1.0) ? 1.0 : t; // Clamp t to [0, 1]
+
+  // Easing: SmoothStep
+  t = t * t * (3.0f - 2.0f * t);
+
+  float interpolated = start + (target - start) * t;
+
+  // Snap to target if within 1 pixel
+  if (abs(interpolated - target) < 1.0f) {
+    return target;
+  }
+
+  return interpolated;
 }
 
 // void animateRectangle(int startX, int endX, int scrollStartX, int scrollEndX,
