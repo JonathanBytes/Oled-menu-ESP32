@@ -130,7 +130,8 @@ void handleRotaryButton(MultiPurposeButton &rotbtn) {
     if (currentMode == ICONS_MODE) {
       // Change page
       selectedItem = 0;
-      currentPage = (currentPage + 1) % totalPages; // toggle between pages
+      // currentPage = (currentPage + 1) % totalPages; // toggle between pages
+      currentPage = getPageIndexByName("home");
     } else if (currentMode == PARAMS_MODE) {
       // Switch back to icons mode
       currentMode = ICONS_MODE;

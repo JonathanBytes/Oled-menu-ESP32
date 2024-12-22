@@ -77,27 +77,49 @@ void drawSelection(int x, int scrollX) {
                    SCROLL_BAR_HEIGHT); // Scroll indicator
 }
 
+unsigned long animationStartTime = 0;
+float currentTargetX = 0;
+float scrollTargetX = 0;
+const float ANIMATION_TOLERANCE = 0.5; // Tolerance to prevent small jumps
+
 void drawSelectionIndicator() {
   int totalIcons = pages[currentPage].iconCount;
   const unsigned char *selectedIcon = pages[currentPage].icons[selectedItem];
   int totalParams = getIconParamsCount(selectedIcon);
+
+  // Calculate target positions
   int selectionPosX = 2 + (selectedItem - firstVisibleItem) * ITEM_WIDTH;
   int scrollPosX;
+
   if (currentMode == PARAMS_MODE) {
-    // Serial.println("Selected param: " + String(selectedParam));
     scrollPosX = (DISPLAY_WIDTH - SCROLL_BAR_WIDTH) *
                  ((float)hoveredParam / (totalParams - 1));
   } else if (currentMode == ICONS_MODE) {
-    // Serial.println("Selected item: " + String(selectedItem));
     scrollPosX = (DISPLAY_WIDTH - SCROLL_BAR_WIDTH) *
                  ((float)selectedItem / (totalIcons - 1));
   }
 
-  if (selectionPosX != currentX || scrollPosX != scrollCurrentX) {
-    // animateRectangle(currentX, selectionPosX, scrollCurrentX, scrollPosX);
+  // Update target positions
+  if (selectionPosX != currentTargetX || scrollPosX != scrollTargetX) {
+    currentTargetX = selectionPosX;
+    scrollTargetX = scrollPosX;
+    animationStartTime = millis(); // Reset animation start
   }
 
-  drawSelection(selectionPosX, scrollPosX);
+  // Animate selection position
+  currentX = animatePosition(currentX, currentTargetX, animationStartTime, 500);
+  scrollCurrentX = animatePosition(scrollCurrentX, scrollTargetX, animationStartTime, 500);
+
+  // Snap to target when within tolerance
+  if (abs(currentX - currentTargetX) < ANIMATION_TOLERANCE) {
+    currentX = currentTargetX;
+  }
+  if (abs(scrollCurrentX - scrollTargetX) < ANIMATION_TOLERANCE) {
+    scrollCurrentX = scrollTargetX;
+  }
+
+  // Draw the selection at interpolated positions
+  drawSelection(currentX, scrollCurrentX);
 }
 
 void drawCurrentPresetName() {
