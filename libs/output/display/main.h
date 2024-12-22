@@ -174,11 +174,19 @@ void drawEditPreset(int x, int scroll) {
 void setupDisplay() {
   display.init();
   display.flipScreenVertically();
-  display.setContrast(5);
+  display.setContrast(brightness);
 }
 
 void updateDisplay() {
   display.clear();
+  // Check if changing brightness
+  if (currentPage == getPageIndexByName("settings") && selectedItem == 1 &&
+      currentMode == PARAMS_MODE && selectedParam == 0) {
+    Serial.println("Changing brightness to: " +
+                   String(iconParamsArray[5].paramValues[0]));
+    brightness = iconParamsArray[5].paramValues[0];
+    display.setContrast(map(brightness, 0, 100, 0, 255));
+  }
   // display.setContrast(map(iconParamsArray[5].paramValues[0], 0, 100, 0,
   // 255));
   if (!shouldDrawCircle()) {

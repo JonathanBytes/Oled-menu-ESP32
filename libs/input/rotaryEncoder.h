@@ -15,6 +15,7 @@ AiEsp32RotaryEncoder rotaryEncoder =
     AiEsp32RotaryEncoder(ROT_CLK, ROT_DT, ROT_SW, -1, ROTARY_ENCODER_STEPS);
 
 void IRAM_ATTR readEncoderISR() { rotaryEncoder.readEncoder_ISR(); }
+int16_t encoderDelta;
 
 void rotaryEncoderSetup() {
   rotaryEncoder.begin();
@@ -30,7 +31,7 @@ void rotaryEncoderSetup() {
 }
 
 void handleRotaryEncoder(int totalIcons) {
-  int16_t encoderDelta = rotaryEncoder.encoderChanged();
+  encoderDelta = rotaryEncoder.encoderChanged();
   if (currentMode == ICONS_MODE) {
     if (encoderDelta < 0) {
       // Move to next selection

@@ -62,6 +62,16 @@ void actionBrightness() {
   // Define what happens when the brightness icon is selected
 }
 
+void actionShowFPS() {
+  // Define what happens when the show FPS icon is selected
+  SHOW_FPS = !SHOW_FPS;
+}
+
+void actionFrameCap() {
+  // Define what happens when the frame cap icon is selected
+  FRAME_CAP = !FRAME_CAP;
+}
+
 void actionSave() {
   // Define what happens when the save icon is selected
 }
@@ -121,8 +131,10 @@ IconAction actionsEditPreset[] = {actionBack, actionDrive,  actionAmpMrsh,
 const unsigned char *iconsEditPreset[] = {icon_back, icon_drive,  icon_amp_mrsh,
                                           icon_cab,  icon_reverb, icon_save};
 
-IconAction actionsSettings[] = {actionBack, actionBrightness};
-const unsigned char *iconsSettings[] = {icon_back, icon_brightness};
+IconAction actionsSettings[] = {actionBack, actionBrightness, actionShowFPS,
+                                actionFrameCap};
+const unsigned char *iconsSettings[] = {icon_back, icon_brightness,
+                                        icon_brightness, icon_drive};
 
 // Pages array
 Page pages[] = {

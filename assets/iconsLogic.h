@@ -1,5 +1,7 @@
 #include "icons.h"
 
+int brightness = 0;
+
 struct IconParams {
   const unsigned char *icon;
   const char *name;
@@ -10,12 +12,42 @@ struct IconParams {
 };
 
 IconParams iconParamsArray[] = {
-  {icon_drive, "Drive", {"Gain", "Tone", "Mix", "Level"}, {10, 11, 12, 13}, {0, 15, 48, 100}, 4},
-  {icon_amp_fndr, "Amp Fender", {"Volume", "Bass", "Mid", "Treb"}, {20, 21, 22, 23}, {0, 0, 0, 0}, 4},
-  {icon_amp_mrsh, "Amp Marshall", {"Vol", "Bass", "Mid", "Treb"}, {30, 31, 32, 33}, {0, 0, 0, 0}, 4},
-  {icon_cab, "Cab", {"Mic", "Pos", "Dist", "Level"}, {40, 41, 42, 43}, {0, 0, 0, 0}, 4},
-  {icon_reverb, "Reverb", {"Decay", "Mix", "L-Cut", "H-Cut"}, {50, 51, 52, 53}, {0, 0, 0, 0}, 4},
-  {icon_brightness, "Brightness", {"Value", "", "", ""}, {60, 61, 62, 63}, {100, 0, 0, 0}, 1},
+    {icon_drive,
+     "Drive",
+     {"Gain", "Tone", "Mix", "Level"},
+     {10, 11, 12, 13},
+     {0, 15, 48, 100},
+     4},
+    {icon_amp_fndr,
+     "Amp Fender",
+     {"Volume", "Bass", "Mid", "Treb"},
+     {20, 21, 22, 23},
+     {0, 0, 0, 0},
+     4},
+    {icon_amp_mrsh,
+     "Amp Marshall",
+     {"Vol", "Bass", "Mid", "Treb"},
+     {30, 31, 32, 33},
+     {0, 0, 0, 0},
+     4},
+    {icon_cab,
+     "Cab",
+     {"Mic", "Pos", "Dist", "Level"},
+     {40, 41, 42, 43},
+     {0, 0, 0, 0},
+     4},
+    {icon_reverb,
+     "Reverb",
+     {"Decay", "Mix", "L-Cut", "H-Cut"},
+     {50, 51, 52, 53},
+     {0, 0, 0, 0},
+     4},
+    {icon_brightness,
+     "Brightness",
+     {"Value", "", "", ""},
+     {60, 61, 62, 63},
+     {brightness, 0, 0, 0},
+     1},
 };
 
 // Brightness from params
