@@ -39,6 +39,9 @@ void handleHardware(int totalIcons) {
 
   // Manejamos los potenciómetros usando las CC calculadas dinámicamente
   // handlePots();
+  if (currentPage == getPageIndexByName("volume")) {
+    handlePots();
+  }
   handleButtonPresses();
   handleRotaryEncoder(totalIcons);
 }

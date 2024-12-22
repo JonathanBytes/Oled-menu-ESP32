@@ -32,14 +32,27 @@ void actionHome() {
 void actionPresets() {
   // Define what happens when the presets icon is selected
   currentPage = getPageIndexByName("preset");
+  selectedItem = 1;
+  firstVisibleItem = 1;
+}
+
+void actionLive() {
+  // Define what happens when the live icon is selected
+  currentPage = getPageIndexByName("live");
+  selectedItem = 0;
+  firstVisibleItem = 0;
 }
 
 void actionKnob() {
   // Define what happens when the knob icon is selected
+  currentPage = getPageIndexByName("volume");
+  selectedItem = 0;
+  firstVisibleItem = 0;
 }
 
 void actionRestart() {
   // Define what happens when the restart icon is selected
+  ESP.restart();
 }
 
 void actionShutdown() {
@@ -49,11 +62,15 @@ void actionShutdown() {
 void actionBack() {
   // Define what happens when the back icon is selected
   currentPage = getPageIndexByName("home");
+  selectedItem = 0;
+  firstVisibleItem = 0;
 }
 
 void actionGear() {
   // Define what happens when the gear icon is selected
   currentPage = getPageIndexByName("settings");
+  selectedItem = 1;
+  firstVisibleItem = 1;
 }
 
 void actionBrightness() {
@@ -65,11 +82,19 @@ void actionBrightness() {
 void actionShowFPS() {
   // Define what happens when the show FPS icon is selected
   SHOW_FPS = !SHOW_FPS;
+  // update value var
+  if (SHOW_FPS) {
+    iconParamsArray[6].paramValues[0] = 1;
+  } else {
+    iconParamsArray[6].paramValues[0] = 0;
+  }
 }
 
 void actionFrameCap() {
   // Define what happens when the frame cap icon is selected
   FRAME_CAP = !FRAME_CAP;
+  // currentMode = PARAMS_MODE;
+  // hoveredParam = 0;
 }
 
 void actionSave() {
@@ -117,9 +142,9 @@ void actionReverb() {
 }
 
 // Icons and Actions arrays
-IconAction actionsHome[] = {actionPresets, actionKnob, actionGear,
+IconAction actionsHome[] = {actionLive, actionPresets, actionKnob, actionGear,
                             actionRestart, actionShutdown};
-const unsigned char *iconsHome[] = {icon_presets, icon_knob, icon_gear,
+const unsigned char *iconsHome[] = {icon_live, icon_edit, icon_knob, icon_gear,
                                     icon_restart, icon_shutdown};
 
 IconAction actionsPreset[] = {actionBack, actionDrive,  actionAmpFndr,
@@ -135,7 +160,10 @@ const unsigned char *iconsEditPreset[] = {icon_back, icon_drive,  icon_amp_mrsh,
 IconAction actionsSettings[] = {actionBack, actionBrightness, actionShowFPS,
                                 actionFrameCap, actionSave};
 const unsigned char *iconsSettings[] = {icon_back, icon_brightness,
-                                        icon_brightness, icon_drive, icon_save};
+                                        icon_fps_overlay, icon_fps_lock, icon_save};
+
+IconAction actionsVolume[] = {actionBack, actionKnob};
+const unsigned char *iconsVolume[] = {icon_back, icon_knob};
 
 // Pages array
 Page pages[] = {
@@ -145,7 +173,11 @@ Page pages[] = {
     {"editPreset", iconsEditPreset, actionsEditPreset,
      sizeof(iconsEditPreset) / sizeof(iconsEditPreset[0])},
     {"settings", iconsSettings, actionsSettings,
-     sizeof(iconsSettings) / sizeof(iconsSettings[0])}};
+     sizeof(iconsSettings) / sizeof(iconsSettings[0])},
+    {"volume", iconsVolume, actionsVolume,
+     sizeof(iconsVolume) / sizeof(iconsVolume[0])},
+    {"live", iconsHome, actionsHome, sizeof(iconsHome) / sizeof(iconsHome[0])},
+};
 
 int totalPages = sizeof(pages) / sizeof(pages[0]);
 

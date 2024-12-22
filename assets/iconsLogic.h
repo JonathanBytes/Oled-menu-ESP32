@@ -48,6 +48,18 @@ IconParams iconParamsArray[] = {
      {60, 61, 62, 63},
      {brightness, 0, 0, 0},
      1},
+    {icon_fps_overlay,
+     "FPS Overlay",
+     {"Value", "", "", ""},
+     {0, 0, 0, 0},
+     {0, 0, 0, 0},
+     1},
+    {icon_fps_lock,
+     "FPS Lock",
+     {"Enable", "Max FPS", "", ""},
+     {0, 0, 0, 0},
+     {0, 0, 0, 0},
+     2},
 };
 
 // Brightness from params

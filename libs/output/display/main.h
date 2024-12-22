@@ -102,30 +102,27 @@ void drawSelectionIndicator() {
 
 void drawCurrentPresetName() {
   display.setFont(Pixel_Operator_HB_16);
-  display.drawString(2, 36, currentPresetName);
+  int centered_x = (DISPLAY_WIDTH - display.getStringWidth(currentPresetName)) /
+                   2; // Center text
+  display.drawString(centered_x, 36, currentPresetName);
+}
+
+void drawCurrentBank() {
+  display.setFont(Pixel_Operator_HB_16);
+  int centered_x = (DISPLAY_WIDTH - display.getStringWidth(currentBankName)) /
+                   2; // Center text
+  display.drawString(centered_x, 5, currentBankName);
 }
 
 void drawUI() {
-  // All pages
-
-  drawIcons(currentPage);
-  drawSelectionIndicator();
-  drawScrollBar();
-  // if (currentMode == PARAMS_MODE) {
-  //   Page &page =
-  //       pages[currentPage]; // Ensure currentPage is treated as an index
-  //   if (page.icons[selectedItem] != nullptr) {
-  //     const unsigned char *selectedIcon = page.icons[selectedItem];
-  //   }
-  // }
-
-  // If Home page:
-  // Icons
-  // IconSelection
-  // Scrollbar
-  // Scroll indicator
-  if (currentPage == getPageIndexByName("home")) {
+  
+  if (currentPage == getPageIndexByName("live")) { // For Live page
+    drawCurrentBank();
     drawCurrentPresetName();
+  } else { // For all other pages
+    drawIcons(currentPage);
+    drawSelectionIndicator();
+    drawScrollBar();
   }
 
   // If Preset page:
