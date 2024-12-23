@@ -93,34 +93,91 @@ const char banks[] PROGMEM = R"=====(
       ]
     },
     {
-      "name": "Bank 2",
+      "name": "Indie",
       "presets": [
         {
-          "name": "Preset 1",
+          "name": "Song2 Clean",
           "onActivate": [
             {
               "type": "control_change",
-              "channel": 2,
-              "address": 64,
+              "address": 4,
               "value": 127
+            },
+            {
+              "type": "program_change",
+              "address": 4
             }
           ],
-          "onDeactivate": []
+          "onDeactivate": [
+            {
+              "type": "control_change",
+              "address": 4,
+              "value": 0
+            }
+          ]
         },
         {
-          "name": "Preset 2",
-          "onActivate": [],
-          "onDeactivate": []
+          "name": "Song2 Dirt",
+          "onActivate": [
+            {
+              "type": "control_change",
+              "address": 5,
+              "value": 127
+            },
+            {
+              "type": "program_change",
+              "address": 5
+            }
+          ],
+          "onDeactivate": [
+            {
+              "type": "control_change",
+              "address": 5,
+              "value": 0
+            }
+          ]
         },
         {
-          "name": "Preset 3",
-          "onActivate": [],
-          "onDeactivate": []
+          "name": "Take me out",
+          "onActivate": [
+            {
+              "type": "control_change",
+              "address": 6,
+              "value": 127
+            },
+            {
+              "type": "program_change",
+              "address": 6
+            }
+          ],
+          "onDeactivate": [
+            {
+              "type": "control_change",
+              "address": 6,
+              "value": 0
+            }
+          ]
         },
         {
-          "name": "Preset 4",
-          "onActivate": [],
-          "onDeactivate": []
+          "name": "RU Mine",
+          "onActivate": [
+            {
+              "type": "control_change",
+              "address": 7,
+              "value": 127
+            },
+            {
+              "type": "program_change",
+              "address": 7
+            }
+          ],
+          "onDeactivate": [
+            {
+              "type": "control_change",
+              "address": 7,
+              "value": 0
+            }
+          ]
         }
       ]
     }
