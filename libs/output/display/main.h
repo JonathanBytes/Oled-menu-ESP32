@@ -30,6 +30,39 @@ void drawIcons(int currentPageIndex) {
   }
 }
 
+void drawDottedLine(int x0, int y0, int x1, int y1, int dotSpacing) {
+  int dx = abs(x1 - x0);
+  int dy = abs(y1 - y0);
+
+  int sx = (x0 < x1) ? 1 : -1;
+  int sy = (y0 < y1) ? 1 : -1;
+
+  int err = dx - dy;
+  int e2;
+  int count = 0; // Counter for spacing dots
+
+  while (true) {
+    // Draw the dot only at the specified spacing
+    if (count % dotSpacing == 0) {
+      display.setPixel(x0, y0);
+    }
+    count++;
+
+    if (x0 == x1 && y0 == y1)
+      break;
+
+    e2 = 2 * err;
+    if (e2 > -dy) {
+      err -= dy;
+      x0 += sx;
+    }
+    if (e2 < dx) {
+      err += dx;
+      y0 += sy;
+    }
+  }
+}
+
 void drawLiveIcons(int currentPageIndex) {
   // Only draw the first two icons on each side of the display
   display.drawXbm(-2, 2, ICON_WIDTH, ICON_HEIGHT,
@@ -40,6 +73,7 @@ void drawLiveIcons(int currentPageIndex) {
   // display.drawLine((105) * selectedItem + 4, 26, (105) * selectedItem + 18,
   // 26);
   display.fillRect(105 * selectedItem + 4, 26, 14, 2);
+  drawDottedLine(0, 32, 128, 32, 3);
 }
 
 void drawParamSelection(int i, int x) {
