@@ -10,6 +10,7 @@ JsonArray presets;
 JsonObject currentPreset;
 String currentPresetName;
 String currentBankName;
+int BANK_COUNT;
 
 void jsonSetup() {
   // Copy JSON from PROGMEM to RAM and parse it
@@ -76,6 +77,7 @@ void jsonSetup() {
 
   currentPresetName = banksArray[0]["presets"][0]["name"].as<const char *>();
   currentBankName = banksArray[0]["name"].as<const char *>();
+  BANK_COUNT = banksArray.size();
 
   Serial.println(F("JSON setup complete."));
 }

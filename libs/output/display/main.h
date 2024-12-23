@@ -30,6 +30,18 @@ void drawIcons(int currentPageIndex) {
   }
 }
 
+void drawLiveIcons(int currentPageIndex) {
+  // Only draw the first two icons on each side of the display
+  display.drawXbm(-2, 2, ICON_WIDTH, ICON_HEIGHT,
+                  pages[currentPageIndex].icons[0]);
+  display.drawXbm(102, 2, ICON_WIDTH, ICON_HEIGHT,
+                  pages[currentPageIndex].icons[1]);
+
+  // display.drawLine((105) * selectedItem + 4, 26, (105) * selectedItem + 18,
+  // 26);
+  display.fillRect(105 * selectedItem + 4, 26, 14, 2);
+}
+
 void drawParamSelection(int i, int x) {
   if (currentMode == PARAMS_MODE && hoveredParam == i) {
     // Highlight hoveredParam parameter
@@ -107,8 +119,9 @@ void drawSelectionIndicator() {
   }
 
   // Animate selection position
-  currentX = animatePosition(currentX, currentTargetX, animationStartTime, 500);
-  scrollCurrentX = animatePosition(scrollCurrentX, scrollTargetX, animationStartTime, 500);
+  currentX = animatePosition(currentX, currentTargetX, animationStartTime, 350);
+  scrollCurrentX =
+      animatePosition(scrollCurrentX, scrollTargetX, animationStartTime, 350);
 
   // Draw the selection at interpolated positions
   drawSelection(currentX, scrollCurrentX);
@@ -129,8 +142,9 @@ void drawCurrentBank() {
 }
 
 void drawUI() {
-  
+
   if (currentPage == getPageIndexByName("live")) { // For Live page
+    drawLiveIcons(currentPage);
     drawCurrentBank();
     drawCurrentPresetName();
   } else { // For all other pages

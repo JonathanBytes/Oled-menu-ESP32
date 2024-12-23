@@ -66,6 +66,26 @@ void actionBack() {
   firstVisibleItem = 0;
 }
 
+void actionBackwardBank() {
+  // change current bank to previous bank
+  if (currentBankIndex > 0) {
+    currentBankIndex--;
+    currentBankName = banksArray[currentBankIndex]["name"].as<const char *>();
+    currentPresetName =
+        banksArray[currentBankIndex]["presets"][0]["name"].as<const char *>();
+  }
+}
+
+void actionForwardBank() {
+  // Define what happens when the forward icon is selected
+  if (currentBankIndex < BANK_COUNT - 1) {
+    currentBankIndex++;
+    currentBankName = banksArray[currentBankIndex]["name"].as<const char *>();
+    currentPresetName =
+        banksArray[currentBankIndex]["presets"][0]["name"].as<const char *>();
+  }
+}
+
 void actionGear() {
   // Define what happens when the gear icon is selected
   currentPage = getPageIndexByName("settings");
@@ -142,10 +162,10 @@ void actionReverb() {
 }
 
 // Icons and Actions arrays
-IconAction actionsHome[] = {actionLive, actionPresets, actionKnob, actionGear,
-                            actionRestart, actionShutdown};
-const unsigned char *iconsHome[] = {icon_live, icon_edit, icon_knob, icon_gear,
-                                    icon_restart, icon_shutdown};
+IconAction actionsHome[] = {actionLive, actionPresets, actionKnob,
+                            actionGear, actionRestart, actionShutdown};
+const unsigned char *iconsHome[] = {icon_live, icon_edit,    icon_knob,
+                                    icon_gear, icon_restart, icon_shutdown};
 
 IconAction actionsPreset[] = {actionBack, actionDrive,  actionAmpFndr,
                               actionCab,  actionReverb, actionSave};
@@ -159,11 +179,14 @@ const unsigned char *iconsEditPreset[] = {icon_back, icon_drive,  icon_amp_mrsh,
 
 IconAction actionsSettings[] = {actionBack, actionBrightness, actionShowFPS,
                                 actionFrameCap, actionSave};
-const unsigned char *iconsSettings[] = {icon_back, icon_brightness,
-                                        icon_fps_overlay, icon_fps_lock, icon_save};
+const unsigned char *iconsSettings[] = {
+    icon_back, icon_brightness, icon_fps_overlay, icon_fps_lock, icon_save};
 
 IconAction actionsVolume[] = {actionBack, actionKnob};
 const unsigned char *iconsVolume[] = {icon_back, icon_knob};
+
+IconAction actionsLive[] = {actionBackwardBank, actionForwardBank};
+const unsigned char *iconsLive[] = {icon_back_arrow, icon_forward_arrow};
 
 // Pages array
 Page pages[] = {
@@ -176,8 +199,7 @@ Page pages[] = {
      sizeof(iconsSettings) / sizeof(iconsSettings[0])},
     {"volume", iconsVolume, actionsVolume,
      sizeof(iconsVolume) / sizeof(iconsVolume[0])},
-    {"live", iconsHome, actionsHome, sizeof(iconsHome) / sizeof(iconsHome[0])},
-};
+    {"live", iconsLive, actionsLive, sizeof(iconsLive) / sizeof(iconsLive[0])}};
 
 int totalPages = sizeof(pages) / sizeof(pages[0]);
 
