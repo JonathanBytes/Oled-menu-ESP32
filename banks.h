@@ -3,184 +3,430 @@
 
 const char banks[] PROGMEM = R"=====(
 [
-    {
-      "name": "Iron Maiden",
-      "presets": [
-        {
-          "name": "Clean",
-          "onActivate": [
-            {
-              "type": "control_change",
-              "address": 0,
-              "value": 0
-            },
-            {
-              "type": "program_change",
-              "address": 0
-            }
-          ],
-          "onDeactivate": [
-            {
-              "type": "control_change",
-              "address": 0,
-              "value": 127
-            }
-          ]
-        },
-        {
-          "name": "Rythm",
-          "onActivate": [
-            {
-              "type": "control_change",
-              "address": 1,
-              "value": 127
-            },
-            {
-              "type": "program_change",
-              "address": 1
-            }
-          ],
-          "onDeactivate": [
-            {
-              "type": "control_change",
-              "address": 1,
-              "value": 0
-            }
-          ]
-        },
-        {
-          "name": "Solo",
-          "onActivate": [
-            {
-              "type": "control_change",
-              "address": 2,
-              "value": 127
-            },
-            {
-              "type": "program_change",
-              "address": 2
-            }
-          ],
-          "onDeactivate": [
-            {
-              "type": "control_change",
-              "address": 2,
-              "value": 0
-            }
-          ]
-        },
-        {
-          "name": "Rythm Big",
-          "onActivate": [
-            {
-              "type": "control_change",
-              "address": 3,
-              "value": 127
-            },
-            {
-              "type": "program_change",
-              "address": 3
-            }
-          ],
-          "onDeactivate": [
-            {
-              "type": "control_change",
-              "address": 3,
-              "value": 0
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Indie",
-      "presets": [
-        {
-          "name": "Song2 Clean",
-          "onActivate": [
-            {
-              "type": "control_change",
-              "address": 4,
-              "value": 127
-            },
-            {
-              "type": "program_change",
-              "address": 4
-            }
-          ],
-          "onDeactivate": [
-            {
-              "type": "control_change",
-              "address": 4,
-              "value": 0
-            }
-          ]
-        },
-        {
-          "name": "Song2 Dirt",
-          "onActivate": [
-            {
-              "type": "control_change",
-              "address": 5,
-              "value": 127
-            },
-            {
-              "type": "program_change",
-              "address": 5
-            }
-          ],
-          "onDeactivate": [
-            {
-              "type": "control_change",
-              "address": 5,
-              "value": 0
-            }
-          ]
-        },
-        {
-          "name": "Take me out",
-          "onActivate": [
-            {
-              "type": "control_change",
-              "address": 6,
-              "value": 127
-            },
-            {
-              "type": "program_change",
-              "address": 6
-            }
-          ],
-          "onDeactivate": [
-            {
-              "type": "control_change",
-              "address": 6,
-              "value": 0
-            }
-          ]
-        },
-        {
-          "name": "RU Mine",
-          "onActivate": [
-            {
-              "type": "control_change",
-              "address": 7,
-              "value": 127
-            },
-            {
-              "type": "program_change",
-              "address": 7
-            }
-          ],
-          "onDeactivate": [
-            {
-              "type": "control_change",
-              "address": 7,
-              "value": 0
-            }
-          ]
-        }
-      ]
-    }
+  {
+    "name":"Iron Maiden",
+    "presets":[
+      {
+        "name":"Clean",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":0,
+            "value":0
+          },
+          {
+            "type":"program_change",
+            "address":0
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":0,
+            "value":127
+          }
+        ]
+      },
+      {
+        "name":"Rythm",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":1,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":1
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":1,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"Solo",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":2,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":2
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":2,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"Rythm Big",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":3,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":3
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":3,
+            "value":0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name":"Indie",
+    "presets":[
+      {
+        "name":"Mr. brightside",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":4,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":4
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":4,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"Take me out",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":5,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":5
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":5,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"R U mine",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":6,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":6
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":6,
+            "value":0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name":"Indie 2",
+    "presets":[
+      {
+        "name":"Last Nite Rythm",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":7,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":7
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":7,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"Last Nite Solo",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":8,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":8
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":8,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"Teddy Picker",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":9,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":9
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":9,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"Teddy Picker Clean",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":10,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":10
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":10,
+            "value":0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name":"Indie 3",
+    "presets":[
+      {
+        "name":"Song2 Clean",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":11,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":11
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":11,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"Song2 Dirt",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":12,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":12
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":12,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"I wanna be your slave",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":13,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":13
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":13,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name": "Reptilia",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":14,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":14
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":14,
+            "value":0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name":"Indie 4",
+    "presets":[
+      {
+        "name":"Hate to Say I told you so",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":15,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":15
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":15,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"Shadows",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":16,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":16
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":16,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"Placeholder 1",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":17,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":17
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":17,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"Placeholder 2",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":18,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":18
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":18,
+            "value":0
+          }
+        ]
+      }
+    ]
+  }
 ]
 )=====";
 
