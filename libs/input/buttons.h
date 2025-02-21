@@ -89,6 +89,7 @@ void handleButton(MultiPurposeButton &button, bool direction) {
       if (strcmp(type, "control_change") == 0) {
         midi.sendCC({address, Channel_1}, value);
       } else if (strcmp(type, "program_change") == 0) {
+        delay(40);
         midi.sendPC({address, Channel_1, Cable_1});
       }
     }
