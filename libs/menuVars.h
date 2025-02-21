@@ -70,20 +70,24 @@ void actionBackwardBank() {
   // change current bank to previous bank
   if (currentBankIndex > 0) {
     currentBankIndex--;
-    currentBankName = banksArray[currentBankIndex]["name"].as<const char *>();
-    currentPresetName =
-        banksArray[currentBankIndex]["presets"][0]["name"].as<const char *>();
+  } else {
+    currentBankIndex = BANK_COUNT - 1; // Cycle to the last bank
   }
+  currentBankName = banksArray[currentBankIndex]["name"].as<const char *>();
+  currentPresetName =
+      banksArray[currentBankIndex]["presets"][0]["name"].as<const char *>();
 }
 
 void actionForwardBank() {
   // Define what happens when the forward icon is selected
   if (currentBankIndex < BANK_COUNT - 1) {
     currentBankIndex++;
-    currentBankName = banksArray[currentBankIndex]["name"].as<const char *>();
-    currentPresetName =
-        banksArray[currentBankIndex]["presets"][0]["name"].as<const char *>();
+  } else {
+    currentBankIndex = 0; // Cycle to the first bank
   }
+  currentBankName = banksArray[currentBankIndex]["name"].as<const char *>();
+  currentPresetName =
+      banksArray[currentBankIndex]["presets"][0]["name"].as<const char *>();
 }
 
 void actionGear() {
