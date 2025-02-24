@@ -1,0 +1,16 @@
+Used library                                       Version Path
+ArduinoJson                                        7.3.0   /home/jonathan/Arduino/libraries/ArduinoJson
+EEPROM                                             3.1.1   /home/jonathan/.arduino15/packages/esp32/hardware/esp32/3.1.1/libraries/EEPROM
+Control Surface                                    2.0.0   /home/jonathan/Arduino/libraries/Control_Surface
+SPI                                                3.1.1   /home/jonathan/.arduino15/packages/esp32/hardware/esp32/3.1.1/libraries/SPI
+USB                                                3.1.1   /home/jonathan/.arduino15/packages/esp32/hardware/esp32/3.1.1/libraries/USB
+Ai Esp32 Rotary Encoder                            1.7     /home/jonathan/Arduino/libraries/Ai_Esp32_Rotary_Encoder
+ESP8266 and ESP32 OLED driver for SSD1306 displays 4.6.1   /home/jonathan/Arduino/libraries/ESP8266_and_ESP32_OLED_driver_for_SSD1306_displays
+Wire                                               3.1.1   /home/jonathan/.arduino15/packages/esp32/hardware/esp32/3.1.1/libraries/Wire
+WebServer                                          3.1.1   /home/jonathan/.arduino15/packages/esp32/hardware/esp32/3.1.1/libraries/WebServer
+FS                                                 3.1.1   /home/jonathan/.arduino15/packages/esp32/hardware/esp32/3.1.1/libraries/FS
+Networking                                         3.1.1   /home/jonathan/.arduino15/packages/esp32/hardware/esp32/3.1.1/libraries/Network
+WiFi                                               3.1.1   /home/jonathan/.arduino15/packages/esp32/hardware/esp32/3.1.1/libraries/WiFi
+
+Used platform Version Path
+esp32:esp32   3.1.1   /home/jonathan/.arduino15/packages/esp32/hardware/esp32/3.1.1

@@ -253,6 +253,48 @@ const char banks[] PROGMEM = R"=====(
     "name":"Indie 3",
     "presets":[
       {
+        "name":"Shadows",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":16,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":16
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":16,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"Reptilia",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":14,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":14
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":14,
+            "value":0
+          }
+        ]
+      },
+      {
         "name":"Song2 Clean",
         "onActivate":[
           {
@@ -274,7 +316,7 @@ const char banks[] PROGMEM = R"=====(
         ]
       },
       {
-        "name":"Song2 Dirt",
+        "name": "Song2 Dirt",
         "onActivate":[
           {
             "type":"control_change",
@@ -293,45 +335,71 @@ const char banks[] PROGMEM = R"=====(
             "value":0
           }
         ]
-      },
+      }
+    ]
+  },
+  {
+    "name":"Indie 4",
+    "presets":[
       {
-        "name":"I wanna be your slave",
+        "name":"Ruby Rythm",
         "onActivate":[
           {
             "type":"control_change",
-            "address":13,
+            "address":18,
             "value":127
           },
           {
             "type":"program_change",
-            "address":13
+            "address":18
           }
         ],
         "onDeactivate":[
           {
             "type":"control_change",
-            "address":13,
+            "address":18,
             "value":0
           }
         ]
       },
       {
-        "name": "Reptilia",
+        "name":"Ruby Solo",
         "onActivate":[
           {
             "type":"control_change",
-            "address":14,
+            "address":19,
             "value":127
           },
           {
             "type":"program_change",
-            "address":14
+            "address":19
           }
         ],
         "onDeactivate":[
           {
             "type":"control_change",
-            "address":14,
+            "address":19,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"Ruby Solo Octaver",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":20,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":20
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":20,
             "value":0
           }
         ]
@@ -339,8 +407,50 @@ const char banks[] PROGMEM = R"=====(
     ]
   },
   {
-    "name":"Indie 4",
+    "name":"Indie 5",
     "presets":[
+      {
+        "name":"Everytime Rythm",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":17,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":17
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":17,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"Everytime Dirt",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":21,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":21
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":21,
+            "value":0
+          }
+        ]
+      },
       {
         "name":"Hate to Say I told you so",
         "onActivate":[
@@ -363,64 +473,22 @@ const char banks[] PROGMEM = R"=====(
         ]
       },
       {
-        "name":"Shadows",
+        "name":"I wanna be your slave",
         "onActivate":[
           {
             "type":"control_change",
-            "address":16,
+            "address":13,
             "value":127
           },
           {
             "type":"program_change",
-            "address":16
+            "address":13
           }
         ],
         "onDeactivate":[
           {
             "type":"control_change",
-            "address":16,
-            "value":0
-          }
-        ]
-      },
-      {
-        "name":"Placeholder 1",
-        "onActivate":[
-          {
-            "type":"control_change",
-            "address":17,
-            "value":127
-          },
-          {
-            "type":"program_change",
-            "address":17
-          }
-        ],
-        "onDeactivate":[
-          {
-            "type":"control_change",
-            "address":17,
-            "value":0
-          }
-        ]
-      },
-      {
-        "name":"Placeholder 2",
-        "onActivate":[
-          {
-            "type":"control_change",
-            "address":18,
-            "value":127
-          },
-          {
-            "type":"program_change",
-            "address":18
-          }
-        ],
-        "onDeactivate":[
-          {
-            "type":"control_change",
-            "address":18,
+            "address":13,
             "value":0
           }
         ]

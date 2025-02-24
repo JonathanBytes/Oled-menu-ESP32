@@ -1,10 +1,13 @@
 #include <Arduino_Helpers.h>
 #include "midi.h"
+#include "midi.cpp"
 #include "analogPots.h"
 #include "buttons.h"
+#include "buttons.cpp"
 #include "rotaryEncoder.h"
 
-void hardwareSetup() {
+void hardwareSetup()
+{
   midi.begin(); // Inicializar la interfaz MIDI
   analogPotsSetup();
   buttonsSetup();
@@ -12,16 +15,19 @@ void hardwareSetup() {
 }
 
 // Función para calcular el acumulado de íconos antes de la página actual
-uint8_t getPreviousIconsCount(int page) {
+uint8_t getPreviousIconsCount(int page)
+{
   uint8_t iconSum = 0;
-  for (int i = 0; i < page; i++) {
+  for (int i = 0; i < page; i++)
+  {
     iconSum +=
         pages[i].iconCount; // Sumar la cantidad de íconos de cada página previa
   }
   return iconSum;
 }
 
-void handleHardware(int totalIcons) {
+void handleHardware(int totalIcons)
+{
 
   // Calculamos el valor base en función del número de íconos previos a la
   // página actual
@@ -39,7 +45,8 @@ void handleHardware(int totalIcons) {
 
   // Manejamos los potenciómetros usando las CC calculadas dinámicamente
   // handlePots();
-  if (currentPage == getPageIndexByName("volume")) {
+  if (currentPage == getPageIndexByName("volume"))
+  {
     handlePots();
   }
   handleButtonPresses();

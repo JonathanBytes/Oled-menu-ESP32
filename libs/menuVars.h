@@ -1,8 +1,19 @@
-#include <cstring> // Ensure strcmp is available
+// At the very top of libs/menuVars.h
+#include "../banks.h"      // For banks data (defines the banks json string)
+#include "../constants.h"  // This should declare Channel_1 and Cable_1
+#include "input/midi.h"    // This should declare the global 'midi' instance
+#include <cstring>         // Ensure strcmp is available
+#include "input/buttons.h" // For updateLeds()
+// (Include ArduinoJson and any other headers as needed)
+// You also need to have declared banksArray, doc, midi, etc.
 
 typedef void (*IconAction)();
 
-enum Mode { ICONS_MODE, PARAMS_MODE };
+enum Mode
+{
+  ICONS_MODE,
+  PARAMS_MODE
+};
 Mode currentMode = ICONS_MODE;
 
 int selectedItem = 0;
@@ -12,7 +23,8 @@ int firstVisibleItem = 0;
 int currentBankIndex = 0;
 int currentPresetIndex = 0;
 
-struct Page {
+struct Page
+{
   const char *name;
   const unsigned char **icons;
   IconAction *actions;
@@ -25,141 +37,244 @@ int getPageIndexByName(const char *name);
 int currentPage = 0;
 
 // Action functions
-void actionHome() {
+void actionHome()
+{
   // Define what happens when the home icon is selected
 }
 
-void actionPresets() {
+void actionPresets()
+{
   // Define what happens when the presets icon is selected
   currentPage = getPageIndexByName("preset");
   selectedItem = 1;
   firstVisibleItem = 1;
 }
 
-void actionLive() {
+void actionLive()
+{
   // Define what happens when the live icon is selected
   currentPage = getPageIndexByName("live");
   selectedItem = 0;
   firstVisibleItem = 0;
 }
 
-void actionKnob() {
+void actionKnob()
+{
   // Define what happens when the knob icon is selected
   currentPage = getPageIndexByName("volume");
   selectedItem = 0;
   firstVisibleItem = 0;
 }
 
-void actionRestart() {
+void actionRestart()
+{
   // Define what happens when the restart icon is selected
   ESP.restart();
 }
 
-void actionShutdown() {
+void actionShutdown()
+{
   // Define what happens when the shutdown icon is selected
 }
 
-void actionBack() {
+void actionBack()
+{
   // Define what happens when the back icon is selected
   currentPage = getPageIndexByName("home");
   selectedItem = 0;
   firstVisibleItem = 0;
 }
 
-void actionBackwardBank() {
-  // change current bank to previous bank
-  if (currentBankIndex > 0) {
-    currentBankIndex--;
-  } else {
-    currentBankIndex = BANK_COUNT - 1; // Cycle to the last bank
+// Helper functions to send MIDI messages from a preset
+void sendPresetOnDeactivate(JsonObject preset)
+{
+  JsonArray onDeactivate = preset["onDeactivate"];
+  for (JsonObject message : onDeactivate)
+  {
+    const char *type = message["type"];
+    int address = message["address"];
+    int value = message.containsKey("value") ? message["value"] : 0;
+    if (strcmp(type, "control_change") == 0)
+    {
+      midi.sendCC({address, Channel_1}, value);
+    }
+    else if (strcmp(type, "program_change") == 0)
+    {
+      midi.sendPC({address, Channel_1, Cable_1});
+    }
   }
-  currentBankName = banksArray[currentBankIndex]["name"].as<const char *>();
-  currentPresetName =
-      banksArray[currentBankIndex]["presets"][0]["name"].as<const char *>();
 }
 
-void actionForwardBank() {
-  // Define what happens when the forward icon is selected
-  if (currentBankIndex < BANK_COUNT - 1) {
+void sendPresetOnActivate(JsonObject preset)
+{
+  JsonArray onActivate = preset["onActivate"];
+  for (JsonObject message : onActivate)
+  {
+    const char *type = message["type"];
+    int address = message["address"];
+    int value = message.containsKey("value") ? message["value"] : 0;
+    if (strcmp(type, "control_change") == 0)
+    {
+      midi.sendCC({address, Channel_1}, value);
+    }
+    else if (strcmp(type, "program_change") == 0)
+    {
+      delay(40);
+      midi.sendPC({address, Channel_1, Cable_1});
+    }
+  }
+}
+
+// Modified bank change action functions
+void actionBackwardBank()
+{
+  // First, send onDeactivate for the current preset
+  banksArray = doc.as<JsonArray>();
+  currentBank = banksArray[currentBankIndex];
+  presets = currentBank["presets"];
+  currentPreset = presets[currentPresetIndex];
+  sendPresetOnDeactivate(currentPreset);
+
+  // Change bank index backwards
+  if (currentBankIndex > 0)
+  {
+    currentBankIndex--;
+  }
+  else
+  {
+    currentBankIndex = BANK_COUNT - 1; // Cycle to last bank
+  }
+
+  // Update bank and preset for the new bank
+  currentBank = banksArray[currentBankIndex];
+  currentPresetIndex = 0; // Reset preset to the first one in the new bank
+  presets = currentBank["presets"];
+  currentPreset = presets[currentPresetIndex];
+  currentBankName = currentBank["name"].as<const char *>();
+  currentPresetName = currentPreset["name"].as<const char *>();
+
+  // Now send onActivate for the new preset
+  sendPresetOnActivate(currentPreset);
+  updateLeds();
+}
+
+void actionForwardBank()
+{
+  // First, send onDeactivate for the current preset
+  banksArray = doc.as<JsonArray>();
+  currentBank = banksArray[currentBankIndex];
+  presets = currentBank["presets"];
+  currentPreset = presets[currentPresetIndex];
+  sendPresetOnDeactivate(currentPreset);
+
+  // Change bank index forwards
+  if (currentBankIndex < BANK_COUNT - 1)
+  {
     currentBankIndex++;
-  } else {
+  }
+  else
+  {
     currentBankIndex = 0; // Cycle to the first bank
   }
-  currentBankName = banksArray[currentBankIndex]["name"].as<const char *>();
-  currentPresetName =
-      banksArray[currentBankIndex]["presets"][0]["name"].as<const char *>();
+
+  // Update bank and preset for the new bank
+  currentBank = banksArray[currentBankIndex];
+  currentPresetIndex = 0; // Reset preset to the first one in the new bank
+  presets = currentBank["presets"];
+  currentPreset = presets[currentPresetIndex];
+  currentBankName = currentBank["name"].as<const char *>();
+  currentPresetName = currentPreset["name"].as<const char *>();
+
+  // Now send onActivate for the new preset
+  sendPresetOnActivate(currentPreset);
+  updateLeds();
 }
 
-void actionGear() {
+void actionGear()
+{
   // Define what happens when the gear icon is selected
   currentPage = getPageIndexByName("settings");
   selectedItem = 1;
   firstVisibleItem = 1;
 }
 
-void actionBrightness() {
+void actionBrightness()
+{
   currentMode = PARAMS_MODE;
   hoveredParam = 0;
   // Define what happens when the brightness icon is selected
 }
 
-void actionShowFPS() {
+void actionShowFPS()
+{
   // Define what happens when the show FPS icon is selected
   SHOW_FPS = !SHOW_FPS;
   // update value var
-  if (SHOW_FPS) {
+  if (SHOW_FPS)
+  {
     iconParamsArray[6].paramValues[0] = 1;
-  } else {
+  }
+  else
+  {
     iconParamsArray[6].paramValues[0] = 0;
   }
 }
 
-void actionFrameCap() {
+void actionFrameCap()
+{
   // Define what happens when the frame cap icon is selected
   FRAME_CAP = !FRAME_CAP;
   // currentMode = PARAMS_MODE;
   // hoveredParam = 0;
 }
 
-void actionSave() {
+void actionSave()
+{
   // Define what happens when the save icon is selected
   saveEEPROM();
 }
 
-void actionEditPreset() {
+void actionEditPreset()
+{
   currentPage = getPageIndexByName("editPreset");
   // Define what happens when the edit preset icon is selected
 }
 
-void actionDeletePreset() {
+void actionDeletePreset()
+{
   // Define what happens when the delete preset icon is selected
 }
 
-void actionDrive() {
+void actionDrive()
+{
   // Define what happens when the drive icon is selected
   currentMode = PARAMS_MODE;
   hoveredParam = 0;
 }
 
-void actionAmpMrsh() {
+void actionAmpMrsh()
+{
   // Define what happens when the amp_mrsh icon is selected
   currentMode = PARAMS_MODE;
   hoveredParam = 0;
 }
 
-void actionAmpFndr() {
+void actionAmpFndr()
+{
   // Define what happens when the amp_fndr icon is selected
   currentMode = PARAMS_MODE;
   hoveredParam = 0;
 }
 
-void actionCab() {
+void actionCab()
+{
   // Define what happens when the cab icon is selected
   currentMode = PARAMS_MODE;
   hoveredParam = 0;
 }
 
-void actionReverb() {
+void actionReverb()
+{
   // Define what happens when the reverb icon is selected
   currentMode = PARAMS_MODE;
   hoveredParam = 0;
@@ -168,18 +283,18 @@ void actionReverb() {
 // Icons and Actions arrays
 IconAction actionsHome[] = {actionLive, actionPresets, actionKnob,
                             actionGear, actionRestart, actionShutdown};
-const unsigned char *iconsHome[] = {icon_live, icon_edit,    icon_knob,
+const unsigned char *iconsHome[] = {icon_live, icon_edit, icon_knob,
                                     icon_gear, icon_restart, icon_shutdown};
 
-IconAction actionsPreset[] = {actionBack, actionDrive,  actionAmpFndr,
-                              actionCab,  actionReverb, actionSave};
-const unsigned char *iconsPreset[] = {icon_back, icon_drive,  icon_amp_fndr,
-                                      icon_cab,  icon_reverb, icon_save};
+IconAction actionsPreset[] = {actionBack, actionDrive, actionAmpFndr,
+                              actionCab, actionReverb, actionSave};
+const unsigned char *iconsPreset[] = {icon_back, icon_drive, icon_amp_fndr,
+                                      icon_cab, icon_reverb, icon_save};
 
-IconAction actionsEditPreset[] = {actionBack, actionDrive,  actionAmpMrsh,
-                                  actionCab,  actionReverb, actionSave};
-const unsigned char *iconsEditPreset[] = {icon_back, icon_drive,  icon_amp_mrsh,
-                                          icon_cab,  icon_reverb, icon_save};
+IconAction actionsEditPreset[] = {actionBack, actionDrive, actionAmpMrsh,
+                                  actionCab, actionReverb, actionSave};
+const unsigned char *iconsEditPreset[] = {icon_back, icon_drive, icon_amp_mrsh,
+                                          icon_cab, icon_reverb, icon_save};
 
 IconAction actionsSettings[] = {actionBack, actionBrightness, actionShowFPS,
                                 actionFrameCap, actionSave};
@@ -208,18 +323,24 @@ Page pages[] = {
 int totalPages = sizeof(pages) / sizeof(pages[0]);
 
 // Helper functions
-Page *getPageByName(const char *name) {
-  for (int i = 0; i < totalPages; i++) {
-    if (strcmp(pages[i].name, name) == 0) {
+Page *getPageByName(const char *name)
+{
+  for (int i = 0; i < totalPages; i++)
+  {
+    if (strcmp(pages[i].name, name) == 0)
+    {
       return &pages[i];
     }
   }
   return nullptr; // Return nullptr if the page is not found
 }
 
-int getPageIndexByName(const char *name) {
-  for (int i = 0; i < totalPages; i++) {
-    if (strcmp(pages[i].name, name) == 0) {
+int getPageIndexByName(const char *name)
+{
+  for (int i = 0; i < totalPages; i++)
+  {
+    if (strcmp(pages[i].name, name) == 0)
+    {
       return i;
     }
   }

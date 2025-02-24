@@ -2,4 +2,4 @@
 
 // Instanciar la interfaz MIDI sobre USB
 // HairlessMIDI_Interface midi;
-USBMIDI_Interface midi;
+extern USBMIDI_Interface midi;
