@@ -5,33 +5,24 @@ MultiPurposeButton btn1{BUTTON_PREV_PIN}, btn2{BUTTON_NEXT_PIN}, rotbtn{36};
 int snapshots = 4;
 int currentSnapshot = 0;
 
-void updateLeds()
-{
-  if (!fading)
-  { // Solo permitimos cambiar LEDs si no está en fade
+void updateLeds() {
+  if (!fading) { // Solo permitimos cambiar LEDs si no está en fade
     LED_CHANGE = true;
 
     // Actualizar el estado de los LEDs según el snapshot actual
-    if (currentPresetIndex == 0)
-    {
+    if (currentPresetIndex == 0) {
       LED1_ON = true;
       LED2_ON = false;
       LED3_ON = false;
-    }
-    else if (currentPresetIndex == 1)
-    {
+    } else if (currentPresetIndex == 1) {
       LED1_ON = false;
       LED2_ON = true;
       LED3_ON = false;
-    }
-    else if (currentPresetIndex == 2)
-    {
+    } else if (currentPresetIndex == 2) {
       LED1_ON = false;
       LED2_ON = false;
       LED3_ON = true;
-    }
-    else if (currentPresetIndex == 3)
-    {
+    } else if (currentPresetIndex == 3) {
       LED1_ON = true;
       LED2_ON = true;
       LED3_ON = true;
@@ -41,25 +32,23 @@ void updateLeds()
   }
 }
 
-void configureButton(MultiPurposeButton &button)
-{
-  button.setLongPressDelay(600);
+void configureButton(MultiPurposeButton &button) {
+  button.setLongPressDelay(1000);
   button.setMultiPressDelay(400);
   button.begin();
 }
 
-void buttonsSetup()
-{
+void buttonsSetup() {
   configureButton(btn1);
   configureButton(btn2);
   configureButton(rotbtn);
   updateLeds();
 }
 
-void handleButton(MultiPurposeButton &button, bool direction)
-{
-  if (button.update() == button.ShortPressRelease)
-  {
+void handleButton(MultiPurposeButton &button, bool direction) {
+  switch (button.update()) {
+  case button.ShortPressRelease: {
+    // Local variables for ShortPressRelease scoped to this block:
     banksArray = doc.as<JsonArray>();
     currentBank = banksArray[currentBankIndex];
     presets = currentBank["presets"];
@@ -67,29 +56,22 @@ void handleButton(MultiPurposeButton &button, bool direction)
 
     // Deactivate current preset
     JsonArray onDeactivate = currentPreset["onDeactivate"];
-    for (JsonObject message : onDeactivate)
-    {
+    for (JsonObject message : onDeactivate) {
       const char *type = message["type"];
       int address = message["address"];
       int value = message.containsKey("value") ? message["value"] : 0;
 
-      if (strcmp(type, "control_change") == 0)
-      {
+      if (strcmp(type, "control_change") == 0) {
         midi.sendCC({address, Channel_1}, value);
-      }
-      else if (strcmp(type, "program_change") == 0)
-      {
+      } else if (strcmp(type, "program_change") == 0) {
         midi.sendPC({address, Channel_1, Cable_1});
       }
     }
 
     // Cycle through presets
-    if (direction)
-    {
+    if (direction) {
       currentPresetIndex = (currentPresetIndex + 1) % presets.size();
-    }
-    else
-    {
+    } else {
       currentPresetIndex =
           (currentPresetIndex - 1 + presets.size()) % presets.size();
     }
@@ -101,30 +83,40 @@ void handleButton(MultiPurposeButton &button, bool direction)
     currentPresetName = currentPreset["name"].as<const char *>();
 
     JsonArray onActivate = currentPreset["onActivate"];
-    for (JsonObject message : onActivate)
-    {
+    for (JsonObject message : onActivate) {
       const char *type = message["type"];
       int address = message["address"];
       int value = message.containsKey("value") ? message["value"] : 0;
 
-      if (strcmp(type, "control_change") == 0)
-      {
+      if (strcmp(type, "control_change") == 0) {
         midi.sendCC({address, Channel_1}, value);
-      }
-      else if (strcmp(type, "program_change") == 0)
-      {
-        delay(40);
+      } else if (strcmp(type, "program_change") == 0) {
+        delay(80);
         midi.sendPC({address, Channel_1, Cable_1});
       }
     }
+
     updateLeds();
+    break; // End of ShortPressRelease block
+  }
+
+  case button.LongPress: {
+    // Local variables for LongPress can go here
+    if (direction) {
+      actionForwardBank();
+    } else {
+      actionBackwardBank();
+    }
+    break; // End of LongPress block
+  }
+
+  default:
+    break;
   }
 }
 
-void handleRotaryButton(MultiPurposeButton &rotbtn)
-{
-  switch (rotbtn.update())
-  {
+void handleRotaryButton(MultiPurposeButton &rotbtn) {
+  switch (rotbtn.update()) {
   case rotbtn.None:
     break;
   case rotbtn.PressStart:
@@ -144,30 +136,22 @@ void handleRotaryButton(MultiPurposeButton &rotbtn)
     // }
 
     // Do the function related to the selectedItem of the currentPage
-    if (currentMode == ICONS_MODE)
-    {
+    if (currentMode == ICONS_MODE) {
       // Change page
       pages[currentPage].actions[selectedItem]();
-    }
-    else if (currentMode == PARAMS_MODE && selectedParam == -1)
-    {
+    } else if (currentMode == PARAMS_MODE && selectedParam == -1) {
       selectedParam = hoveredParam;
-    }
-    else if (currentMode == PARAMS_MODE && selectedParam != -1)
-    {
+    } else if (currentMode == PARAMS_MODE && selectedParam != -1) {
       selectedParam = -1;
     }
     break;
   case rotbtn.LongPress:
-    if (currentMode == ICONS_MODE)
-    {
+    if (currentMode == ICONS_MODE) {
       // Change page
       selectedItem = 0;
       // currentPage = (currentPage + 1) % totalPages; // toggle between pages
       currentPage = getPageIndexByName("home");
-    }
-    else if (currentMode == PARAMS_MODE)
-    {
+    } else if (currentMode == PARAMS_MODE) {
       // Switch back to icons mode
       currentMode = ICONS_MODE;
       hoveredParam = -1;
@@ -177,8 +161,7 @@ void handleRotaryButton(MultiPurposeButton &rotbtn)
   }
 }
 
-void handleButtonPresses()
-{
+void handleButtonPresses() {
   handleButton(btn1, false);
   handleButton(btn2, true);
   handleRotaryButton(rotbtn);

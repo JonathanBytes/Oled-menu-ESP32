@@ -471,7 +471,12 @@ const char banks[] PROGMEM = R"=====(
             "value":0
           }
         ]
-      },
+      }
+    ]
+  },
+  {
+    "name":"Indie 6",
+    "presets":[
       {
         "name":"I wanna be your slave",
         "onActivate":[
@@ -489,6 +494,27 @@ const char banks[] PROGMEM = R"=====(
           {
             "type":"control_change",
             "address":13,
+            "value":0
+          }
+        ]
+      },
+      {
+        "name":"I wanna be your solo",
+        "onActivate":[
+          {
+            "type":"control_change",
+            "address":22,
+            "value":127
+          },
+          {
+            "type":"program_change",
+            "address":22
+          }
+        ],
+        "onDeactivate":[
+          {
+            "type":"control_change",
+            "address":22,
             "value":0
           }
         ]

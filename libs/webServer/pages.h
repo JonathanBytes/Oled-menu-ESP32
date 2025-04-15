@@ -66,10 +66,10 @@ const char todo_html[] PROGMEM = R"rawliteral(
 
 void handleTODO() { server.send(200, "text/html", todo_html); }
 // Función para manejar la configuración del banco actual
-void handleSetBank() {}
+// void handleSetBank() {}
 
-void handleEditBank() {}
+// void handleEditBank() {}
 
-void handleSaveBank() {}
+// void handleSaveBank() {}
 
 void handleNotFound() { server.send(404, "text/plain", "Not found"); }

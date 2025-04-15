@@ -1,14 +1,15 @@
-// // Configuración Wi-Fi STA
-// const char* ssid = "ssid";
-// const char* password = "password";
+// serverVars.h
+#ifndef SERVER_VARS_H
+#define SERVER_VARS_H
 
-// Configuración Wi-Fi AP
-const char *ssid = "ESPMIDI config"; // Enter SSID here
-const char *password = "Papita34";    // Enter Password here
+#include <WiFi.h>
+#include <WebServer.h>
 
-IPAddress local_ip(192, 168, 1, 1);
-IPAddress gateway(192, 168, 1, 1);
-IPAddress subnet(255, 255, 255, 0);
+extern const char *ssid;
+extern const char *password;
+extern IPAddress local_ip;
+extern IPAddress gateway;
+extern IPAddress subnet;
+extern WebServer server;
 
-// Crear instancia del servidor web
-WebServer server(80);
+#endif

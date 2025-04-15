@@ -12,12 +12,14 @@ String currentPresetName;
 String currentBankName;
 int BANK_COUNT;
 
-void jsonSetup() {
+void jsonSetup()
+{
   // Copy JSON from PROGMEM to RAM and parse it
   DeserializationError error = deserializeJson(doc, banks);
 
   // Check for errors in JSON parsing
-  if (error) {
+  if (error)
+  {
     Serial.print(F("Failed to parse JSON: "));
     Serial.println(error.c_str());
     while (true)
